@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap');
+/* 
+tan - #b5dae4
+tomato - #61dafb 
+*/
+*{
+  margin:0;
+  padding:0;
+  max-height :100vh;
+  height:auto;
+}
+
+body{
+  font-family: 'Poppins', sans-serif;
+  background: url('./bg-wall.jpg') no-repeat center center fixed;
+  -webkit-background:cover ;
+  -moz-background:cover ;
+  -o-background:cover ;
+  background:cover ;
+  height:100%;
+}
+
+body::-webkit-scrollbar {
+  width: 0.5em;
+}
+ 
+body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgb(153, 211, 238);
+}
+ 
+body::-webkit-scrollbar-thumb {
+  background-color: #77afe7;
+  outline: 1px solid #2a8ef1;
+  border:2px solid #2a8ef1;
+  border-radius:5em
+}
