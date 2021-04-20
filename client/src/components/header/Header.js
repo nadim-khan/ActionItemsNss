@@ -6,6 +6,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import MobileRightMenuSlider from '@material-ui/core/Drawer';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
+import PersonAddTwoToneIcon from '@material-ui/icons/PersonAddTwoTone';
+import PermIdentityTwoToneIcon from '@material-ui/icons/PermIdentityTwoTone';
 import {
     AppBar,
     Toolbar,
@@ -27,13 +29,14 @@ import {
 } from "@material-ui/icons"
 // import avatar from "../avatar.png"
 import logo from "../../logo.png"
+import Footer from '../Footer/Footer';
 // import Footer from './Footer';
 
 // CSS STYLES
 const useStyles = makeStyles(theme=>({
     menuSliderContainer: {
-        width: 250,
-        background: "black",
+        width: '20rem',
+        background: "#0827c6",
         height: "100%",
         justifyContent:"center"
     },
@@ -50,7 +53,7 @@ const useStyles = makeStyles(theme=>({
         height: theme.spacing(13),
     },
     listItem: {
-        color: "#b5dae4"
+        color: "#fff"
     },
     rightSideButton:{
 
@@ -72,11 +75,6 @@ const menuItems = [
         listPath: "/profile"
     },
     {
-        listIcon: <Apps/>,
-        listText: "Projects",
-        listPath:'/projects'
-    },
-    {
         listIcon: <ContactMail/>,
         listText: "Logout",
         listPath:'/'
@@ -84,12 +82,12 @@ const menuItems = [
 ]
 const signInItems = [
     {
-        listIcon: <Apps/>,
+        listIcon: <PermIdentityTwoToneIcon/>,
         listText: "Login",
         listPath:'/login'
     },
     {
-        listIcon: <ContactMail/>,
+        listIcon: <PersonAddTwoToneIcon/>,
         listText: "Register",
         listPath:'/register'
     }
@@ -126,7 +124,7 @@ const toggleSlider = (slider, open) => () => {
         <Box className={classes.menuSliderContainer} component="div" onClick={toggleSlider(slider,false)}>
             {user && isLogged ?<Avatar className={classes.avatar} src={user.avatar} alt={user.name} /> : <Avatar className={classes.avatar} src={logo} alt="Action Item Logo" />}
             {user && isLogged ?<Typography  align="center" style={{color:'#fff'}}>Hello {user.name} !</Typography> : <Typography  align="center" style={{color:'#fff'}}>Please Login to use the app</Typography>}
-            <Divider/>
+            <Divider style={{margin:'2rem'}}/>
             <List>
                 {links.map((listItem, key) => (
                     <ListItem button key={key} component={Link} to={listItem.listPath} onClick={listItem.listText ==='Logout'? handleLogout:null}>
@@ -143,16 +141,16 @@ const toggleSlider = (slider, open) => () => {
     return (
         <>
             <Box component="nav">
-                <AppBar position ="static" style={{background: "#222"}}>
+                <AppBar position ="static" style={{background: "#0827c6"}}>
                     <Toolbar>
                         <Avatar className={classes.logo} src={logo} component={Link} to="/" alt={user.name} />
-                        <Typography variant="h5" style={{color:"#7fc8db",flex:1}}></Typography>
+                        <Typography variant="h5" style={{color:"#7fc8db",flex:1}}>Action Items</Typography>
                         <MobileRightMenuSlider anchor="right" open={state.right} onClose={toggleSlider("right", false)}>
                             {sideList("right")}
-                            {/* <Footer/> */}
+                            <Footer/>
                         </MobileRightMenuSlider>
                         <IconButton onClick={toggleSlider("right", true)} style={{color:'#fff'}}>
-                        <ArrowLeftIcon  style={{color:'#fff',fontSize:'2.5rem'}}/>{user && isLogged ? <Avatar src={user.avatar} alt={user.name} style={{color:'#fff',fontSize:'2.5rem'}}/> : <AccountCircleIcon style={{color:'#fff',fontSize:'2.5rem'}}/>                    }
+                        <ArrowLeftIcon  style={{color:'#fff',fontSize:'2rem'}}/>{user && isLogged ? <Avatar src={user.avatar} alt={user.name} style={{color:'#fff',fontSize:'2rem'}}/> : <AccountCircleIcon style={{color:'#fff',fontSize:'2.5rem'}}/>                    }
                         </IconButton>
                     </Toolbar>
                 </AppBar>

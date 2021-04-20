@@ -12,7 +12,9 @@ tomato - #61dafb
 
 body{
   font-family: 'Poppins', sans-serif;
-  background: url('./bg-wall.jpg') no-repeat center center fixed;
+  /* background: url('./bg-wall.jpg') no-repeat center center fixed; */
+  background: #fff;
+  color:#000;
   -webkit-background:cover ;
   -moz-background:cover ;
   -o-background:cover ;
