@@ -5,5 +5,7 @@ const authAdmin = require('../middleware/authAdmin')
 
 router.post('/register', appCtrl.register)
 
+router.get('/getAllApps', appCtrl.getAllApps)
+
 
 module.exports = router

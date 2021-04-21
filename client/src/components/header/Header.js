@@ -101,7 +101,6 @@ const Navbar = () => {
  const auth = useSelector(state => state.auth)
 
  const {user, isLogged} = auth
-console.log(user)
 const links = isLogged && user ? menuItems : signInItems;
  const handleLogout = async () => {
      try {

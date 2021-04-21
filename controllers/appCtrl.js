@@ -12,7 +12,7 @@ const appCtrl = {
                 return res.status(400).json({msg: "Please fill in all fields."})
 
             const savedApp = await new App({projectName, taskName, taskDetails,createdBy,assignedTo,createdDate,startDate,expectedEndDate}).save()
-            if(savedApp) return res.status(400).json({msg: "App Registered"})
+            if(savedApp) return res.status(200).json({msg: "App Registered"})
 
             const details = {
                 projectName:projectName,
@@ -30,6 +30,15 @@ const appCtrl = {
             return res.status(500).json({msg: err.message})
         }
     },
+
+    getAllApps: async (req, res) => {
+        try {
+            const allApps = await App.find();
+            if(allApps) return res.status(200).json(allApps)
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    }
     
 }
 
