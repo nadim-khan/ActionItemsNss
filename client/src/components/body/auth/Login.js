@@ -25,13 +25,13 @@ const useStyles=makeStyles(theme=>({
         marginTop:'1rem',
         color:'#fff',
         borderColor:'#61dafb',
-        background:'#2a8ef1',
+        background:'#0747a6',
         '&:hover':{
-            background:'#2a8ef1',
+            background:'#0747a6',
         }
     },
     heading:{
-        color:'#2a8ef1',
+        color:'#0747a6',
         textAlign:"center",
         textTransform:'uppercase'
     },
@@ -39,23 +39,23 @@ const useStyles=makeStyles(theme=>({
 const InputField = withStyles({
     root:{
         '& label.Mui-focused':{
-            color:'#2a8ef1',
+            color:'#0747a6',
         },
         '& label':{
-            color:"#fff"
+            color:"#0747a6"
         },
         '& .MuiOutlinedInput-root':{
             '& fieldset':{
-                borderColor:'#2a8ef1'
+                borderColor:'#0747a6'
             },
             '&:hover fieldset':{
-                borderColor:'#2a8ef1'
+                borderColor:'#0747a6'
             },
             '&.Mui-focused fieldset':{
-                color:'#2a8ef1'
+                color:'#0747a6'
             },
             '& .MuiOutlinedInput-notchedOutline':{
-                borderColor:'#2a8ef1'
+                borderColor:'#0747a6'
             }
         }
     }
@@ -141,7 +141,7 @@ const Login = () => {
     }
 
     return (
-        <Box component="div" style={{background:'#222',height:'90vh'}}>
+        <Box component="div" style={{height:'90vh'}}>
             <Grid container justify="center">
             {/* {(notification.type !== '') ? <div><Notification type={notification.type} msg={notification.msg} /><br/></div> : <></>} */}
                 <Box component="form" onSubmit={loginAuth} className={classes.form}>
@@ -155,7 +155,7 @@ const Login = () => {
                         label="Email"
                         name="email"
                         type="email"
-                        InputProps={{style:{color:"#fff"}}}
+                        InputProps={{style:{color:"#0747a6"}}}
                         variant="outlined"
                         margin="dense"
                         size="medium"
@@ -166,7 +166,7 @@ const Login = () => {
                         fullWidth={true}
                         label="Password"
                         name="password"
-                        InputProps={{style:{color:"#fff"}}}
+                        InputProps={{style:{color:"#0747a6"}}}
                         variant="outlined"
                         margin="dense"
                         type="password"
@@ -175,22 +175,22 @@ const Login = () => {
                         onChange={changeHandler}
                         />
                     <br/>
-                    <Button disabled={!email}className={classes.button} variant="outlined" type="submit" fullWidth={true} endIcon={<SendIcon/>}>Login</Button>
+                    <Button disabled={!email} className={classes.button} variant="outlined" type="submit" fullWidth={true} endIcon={<SendIcon/>}>Login</Button>
                    
                                         
-                    <Typography align="center" style={{color:'#fff',padding:'1rem 0 0.5rem 0' }}> 
+                    <Typography align="center" style={{color:'#0747a6',padding:'1rem 0 0.5rem 0' }}> 
                         Don't have account ?  
-                            <Link  to="/register" style={{textDecoration:'none',color:'#2a8ef1',marginLeft:'0.5rem'}}>Register</Link>
+                            <Link  to="/register" style={{textDecoration:'none',color:'#0747a6',marginLeft:'0.5rem',fontWeight:'700'}}>Register</Link>
                     </Typography>
                     <Typography align="center" > 
-                        <Link to="/forgotPassword" style={{textDecoration:'none',color:'#2a8ef1',marginLeft:'0.5rem'}}>Can't access your account?</Link>
+                        <Link to="/forgotPassword" style={{textDecoration:'none',color:'#0747a6',marginLeft:'0.5rem',fontWeight:'700'}}>Can't access your account?</Link>
                     </Typography>
 
-                    <Typography align="center" style={{color:'#fff',padding:'1rem'}}> 
+                    <Typography align="center" style={{color:'#0747a6',padding:'1rem'}}> 
                         OR
                     </Typography>
                     
-                    <GoogleLogin style={{height:'1rem'}}
+                    <GoogleLogin style={{height:'1rem',background:'#0747a6'}}
                         clientId="1071947068127-gdao61sj7ofgtf9f1hl4s7vhcsciv3ju.apps.googleusercontent.com"
                         buttonText="Login with google"
                         render={renderProps => (

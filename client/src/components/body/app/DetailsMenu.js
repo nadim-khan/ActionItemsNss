@@ -20,11 +20,13 @@ const useStyles = makeStyles((theme) => ({
       }
 }));
 
-const DetailsMenu = () => {
+const DetailsMenu = (props) => {
     const classes = useStyles();
+    console.log('Val',props.currentDetails.details)
   return (
     <Paper className={classes.paper}>
       <Typography className={classes.heading} variant="h6">Details</Typography>
+      {props.currentDetails.details}
     </Paper>
   );
 };

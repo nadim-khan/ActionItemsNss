@@ -1,10 +1,23 @@
 import React from "react";
-import { Box, Paper, Typography, InputBase,Drawer,List,ListItem,ListItemIcon,Divider,ListItemText,ListItemAvatar,Avatar} from "@material-ui/core";
+import {
+  Box,
+  Paper,
+  Typography,
+  InputBase,
+  Drawer,
+  List,
+  ListItem,
+  ListItemIcon,
+  Divider,
+  ListItemText,
+  ListItemAvatar,
+  Avatar,
+} from "@material-ui/core";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import { fade } from "@material-ui/core/styles/colorManipulator";
-import DoubleArrowIcon from '@material-ui/icons/DoubleArrow';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import DoubleArrowIcon from "@material-ui/icons/DoubleArrow";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,7 +78,11 @@ const useStyles = makeStyles((theme) => ({
 
 const ProjectMenu = (props) => {
   const classes = useStyles();
-  const {data} =props
+  const { data } = props;
+
+  const projectClicked = (project) => {
+    props.projectClick(project);
+  };
   return (
     <Paper className={classes.paper}>
       <Typography variant="h6" className={classes.heading}>
@@ -84,10 +101,15 @@ const ProjectMenu = (props) => {
         />
       </Box>
       <List>
-          {data.map((project, index) => (
-            <ListItem button alignItems="flex-start">
+        {data.map((project, index) => (
+          <ListItem
+            button
+            key={index}
+            alignItems="flex-start"
+            onClick={() => projectClicked(project)}
+          >
             <ListItemAvatar>
-              <Avatar alt="Remy Sharp"/>
+              <Avatar alt="Remy Sharp" />
             </ListItemAvatar>
             <ListItemText
               primary={project.projectName}
@@ -99,15 +121,15 @@ const ProjectMenu = (props) => {
                     className={classes.inline}
                     color="textPrimary"
                   >
-                    {project.createdBy} <ArrowRightIcon/>
+                    {project.createdBy} <ArrowRightIcon />
                   </Typography>
-                    {project.assignedTo}
+                  {project.assignedTo}
                 </React.Fragment>
               }
             />
           </ListItem>
-          ))}
-        </List>
+        ))}
+      </List>
     </Paper>
   );
 };

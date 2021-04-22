@@ -32,14 +32,14 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginTop: "1rem",
     color: "#fff",
-    borderColor: "#61dafb",
-    background: "#2a8ef1",
+    borderColor: "#0747a6",
+    background: "#0747a6",
     "&:hover": {
-      background: "#2a8ef1",
+      background: "#0747a6",
     },
   },
   heading: {
-    color: "#2a8ef1",
+    color: "#0747a6",
     textAlign: "center",
     textTransform: "uppercase",
   },
@@ -69,23 +69,23 @@ const useStyles = makeStyles((theme) => ({
 const InputField = withStyles({
   root: {
     "& label.Mui-focused": {
-      color: "#2a8ef1",
+      color: "#0747a6",
     },
     "& label": {
-      color: "#fff",
+      color: "#0747a6",
     },
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "#2a8ef1",
+        borderColor: "#0747a6",
       },
       "&:hover fieldset": {
-        borderColor: "#2a8ef1",
+        borderColor: "#0747a6",
       },
       "&.Mui-focused fieldset": {
-        color: "#2a8ef1",
+        color: "#0747a6",
       },
       "& .MuiOutlinedInput-notchedOutline": {
-        borderColor: "#2a8ef1",
+        borderColor: "#0747a6",
       },
     },
   },
@@ -252,7 +252,7 @@ function Profile() {
         {success && showSuccessMsg(success)}
         {loading && <h3>Loading.....</h3>}
       </Box>
-      <Box component="div" style={{ background: "#222", height: "90vh" }}>
+      <Box component="div" style={{height: "90vh" }}>
         <Grid container justify="center">
           <Box
             component="form"
@@ -280,7 +280,7 @@ function Profile() {
               fullWidth={true}
               label="Name"
               name="name"
-              InputProps={{ style: { color: "#fff" } }}
+              InputProps={{ style: { color: "#0747a6" } }}
               variant="outlined"
               margin="dense"
               size="medium"
@@ -291,7 +291,7 @@ function Profile() {
               fullWidth={true}
               label="Email"
               name="email"
-              InputProps={{ style: { color: "#fff" } }}
+              InputProps={{ style: { color: "#0747a6" } }}
               variant="outlined"
               margin="dense"
               size="medium"
@@ -302,7 +302,7 @@ function Profile() {
               fullWidth={true}
               label="New Password"
               name="password"
-              InputProps={{ style: { color: "#fff" } }}
+              InputProps={{ style: { color: "#0747a6" } }}
               variant="outlined"
               margin="dense"
               type="password"
@@ -313,7 +313,7 @@ function Profile() {
               fullWidth={true}
               label="Confirm Password"
               name="cf_password"
-              InputProps={{ style: { color: "#fff" } }}
+              InputProps={{ style: { color: "#0747a6" } }}
               variant="outlined"
               margin="dense"
               type="password"

@@ -15,13 +15,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "1rem",
     color: "#fff",
     borderColor: "#61dafb",
-    background: "#2a8ef1",
+    background: "#0747a6",
     "&:hover": {
-      background: "#2a8ef1",
+      background: "#0747a6",
     },
   },
   heading: {
-    color: "#2a8ef1",
+    color: "#0747a6",
     textAlign: "center",
     textTransform: "uppercase",
   },
@@ -29,23 +29,23 @@ const useStyles = makeStyles((theme) => ({
 const InputField = withStyles({
   root: {
     "& label.Mui-focused": {
-      color: "#2a8ef1",
+      color: "#0747a6",
     },
     "& label": {
-      color: "#fff",
+      color: "#0747a6",
     },
     "& .MuiOutlinedInput-root": {
       "& fieldset": {
-        borderColor: "#2a8ef1",
+        borderColor: "#0747a6",
       },
       "&:hover fieldset": {
-        borderColor: "#2a8ef1",
+        borderColor: "#0747a6",
       },
       "&.Mui-focused fieldset": {
-        color: "#2a8ef1",
+        color: "#0747a6",
       },
       "& .MuiOutlinedInput-notchedOutline": {
-        borderColor: "#2a8ef1",
+        borderColor: "#0747a6",
       },
     },
   },
@@ -94,7 +94,7 @@ const  ForgotPassword=() =>{
   };
 
   return (
-    <Box component="div" style={{ background: "#222", height: "90vh" }}>
+    <Box component="div" style={{  height: "90vh" }}>
       <Grid container justify="center">
         {/* {notification.type !== "" ? (
           <div>
@@ -118,7 +118,7 @@ const  ForgotPassword=() =>{
             label="Email"
             name="email"
             type="email"
-            InputProps={{ style: { color: "#fff" } }}
+            InputProps={{ style: { color: "#0747a6" } }}
             variant="outlined"
             margin="dense"
             size="medium"

@@ -22,8 +22,8 @@ function Body() {
             <Switch>
                 <Route path="/" component={Home} exact />
 
-                <Route path="/login" component={isLogged ? NotFound : Login} exact />
-                <Route path="/register" component={isLogged ? NotFound : Register} exact />
+                <Route path="/login" component={isLogged ? Home : Login} exact />
+                <Route path="/register" component={isLogged ? Home : Register} exact />
 
                 <Route path="/forgotPassword" component={isLogged ? NotFound : ForgotPassword} exact />
                 <Route path="/user/reset/:token" component={isLogged ? NotFound : ResetPassword} exact />

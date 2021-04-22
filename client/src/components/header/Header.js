@@ -100,7 +100,7 @@ const Navbar = () => {
  })
  const auth = useSelector(state => state.auth)
 
- const {user, isLogged} = auth
+const {user, isLogged} = auth
 const links = isLogged && user ? menuItems : signInItems;
  const handleLogout = async () => {
      try {
