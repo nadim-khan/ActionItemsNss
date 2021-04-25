@@ -6,21 +6,46 @@ const {CLIENT_URL} = process.env
 const appCtrl = {
     register: async (req, res) => {
         try {
-            const {projectName, taskName, taskDetails,createdBy,assignedTo,createdDate,startDate,expectedEndDate} = req.body
+            console.log(req.body)
+            const {
+                projectName,
+                taskDetails,
+                history:history,
+                projectCreatedBy,
+                projectCreatedDate,
+                projectStartDate,
+                projectExpectedEndDate
+            } = req.body
             
-            if(!projectName || !taskName || !taskDetails || !createdBy || !assignedTo)
+            if(!projectName|| !projectCreatedBy)
                 return res.status(400).json({msg: "Please fill in all fields."})
 
-            const savedApp = await new App({projectName, taskName, taskDetails,createdBy,assignedTo,createdDate,startDate,expectedEndDate}).save()
+            if(taskDetails.length == 0)
+                return res.status(400).json({msg: "Please add atlease one task along with the project"})
+
+
+            const savedApp = await new App(
+                {
+                    projectName,
+                    history,
+                    taskDetails,
+                    projectCreatedBy,
+                    projectCreatedDate,
+                    projectStartDate,
+                    projectExpectedEndDate
+                }).save()
+
             if(savedApp) return res.status(200).json({msg: "App Registered"})
+            
 
             const details = {
                 projectName:projectName,
-                taskName:taskName, 
                 taskDetails:taskDetails,
-                createdBy:createdBy,
-                startDate:startDate,
-                expectedEndDate:expectedEndDate
+                history:history,
+                projectCreatedBy:projectCreatedBy,
+                projectCreatedDate:projectCreatedDate,
+                projectStartDate:projectStartDate,
+                projectExpectedEndDate:projectExpectedEndDate
             };
             sendMail(assignedTo, details, "Verify your email address")
 

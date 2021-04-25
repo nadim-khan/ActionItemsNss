@@ -10,25 +10,22 @@ import {
   Typography,
   CssBaseline,
   Divider,
+  Box,
   IconButton,
   ListItem,
   ListItemIcon,
   ListItemText,
 } from "@material-ui/core";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import InboxIcon from "@material-ui/icons/MoveToInbox";
 import MailIcon from "@material-ui/icons/Mail";
-import PersonAddTwoToneIcon from '@material-ui/icons/PersonAddTwoTone';
-import PermIdentityTwoToneIcon from '@material-ui/icons/PermIdentityTwoTone';
-import AddTwoToneIcon from '@material-ui/icons/AddTwoTone';
-import {
-  AssignmentInd,
-  Home,
-  ContactMail
-} from "@material-ui/icons"
+import PersonAddTwoToneIcon from "@material-ui/icons/PersonAddTwoTone";
+import PermIdentityTwoToneIcon from "@material-ui/icons/PermIdentityTwoTone";
+import AddTwoToneIcon from "@material-ui/icons/AddTwoTone";
+import { AssignmentInd, Home, ContactMail } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 
 import axios from "axios";
@@ -64,18 +61,18 @@ const useStyles = makeStyles((theme) => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
-    whiteSpace: "nowrap"
+    whiteSpace: "nowrap",
   },
   drawerOpen: {
     width: drawerWidth,
-    background:'#0747a6',
+    background: "#0747a6",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
   },
   drawerClose: {
-    background:'#0747a6',
+    background: "#0747a6",
     transition: theme.transitions.create("width", {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
@@ -87,10 +84,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   toolbar: {
-    
+    maxWidth: "100%",
     display: "flex",
     alignItems: "center",
-    justifyContent: "flex-end",
     padding: theme.spacing(0, 1),
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
@@ -98,57 +94,56 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
   },
-  listItem:{
-      color:'#fff',
-      fontWeight:'900',
-      fontSize:'.9rem',
-      textTransform:'uppercase'
-  }
+  listItem: {
+    color: "#fff",
+    fontWeight: "900",
+    fontSize: ".9rem",
+    textTransform: "uppercase",
+  },
 }));
 
 const menuItems = [
   {
-      listIcon: <Home/>,
-      listText: "Home",
-      listPath: "/",
-      user: true,
-      admin:true
-  },
-  {
-      listIcon: <AssignmentInd/>,
-      listText: "Profile",
-      listPath: "/profile",
-      user: true,
-      admin:true
-  },
-  {
-      listIcon: <ContactMail/>,
-      listText: "Logout",
-      listPath:'/',
-      user: true,
-      admin:true
-  },
-  {
-    listIcon: <AddTwoToneIcon/>,
-    listText: "Create Project",
-    listPath:'/createApp',
+    listIcon: <Home />,
+    listText: "Home",
+    listPath: "/",
     user: true,
-    admin:true
-}
-]
+    admin: true,
+  },
+  {
+    listIcon: <AssignmentInd />,
+    listText: "Profile",
+    listPath: "/profile",
+    user: true,
+    admin: true,
+  },
+  {
+    listIcon: <ContactMail />,
+    listText: "Logout",
+    listPath: "/",
+    user: true,
+    admin: true,
+  },
+  {
+    listIcon: <AddTwoToneIcon />,
+    listText: "Create Project",
+    listPath: "/createApp",
+    user: true,
+    admin: true,
+  },
+];
 const signInItems = [
   {
-      listIcon: <PermIdentityTwoToneIcon/>,
-      listText: "Login",
-      listPath:'/login'
+    listIcon: <PermIdentityTwoToneIcon />,
+    listText: "Login",
+    listPath: "/login",
   },
   {
-      listIcon: <PersonAddTwoToneIcon/>,
-      listText: "Register",
-      listPath:'/register'
-  }
-]
-
+    listIcon: <PersonAddTwoToneIcon />,
+    listText: "Register",
+    listPath: "/register",
+  },
+];
 
 const MainView = () => {
   const classes = useStyles();
@@ -178,7 +173,7 @@ const MainView = () => {
   };
 
   return (
-    <div className={classes.root}>
+    <Box component="div" className={classes.root}>
       <CssBaseline />
       <AppBar
         position="fixed"
@@ -186,7 +181,7 @@ const MainView = () => {
           [classes.appBarShift]: open,
         })}
       >
-        <Toolbar style={{background:'#0747a6'}}>
+        <Toolbar style={{ background: "#0747a6" }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -216,20 +211,31 @@ const MainView = () => {
           }),
         }}
       >
-        <div className={classes.toolbar}>
-          {auth.user && auth.isLogged ? (
-            <Avatar src={auth.user.avatar} alt={auth.user.name} />
-          ) : (
-            <Avatar />
-          )}
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </div>
+        <Box component="div">
+          <Box display="flex" p={1} className={classes.toolbar} >
+            <Box p={1} width="25%">
+              {auth.user && auth.isLogged ? (
+                <Avatar src={auth.user.avatar} alt={auth.user.name} />
+              ) : (
+                <Avatar />
+              )}
+            </Box>
+            <Box p={1} width="50%" style={{color:'#fff'}}>
+              <Typography align="center">
+                {auth.user && auth.isLogged ? auth.user.name : "Please Log In"}
+              </Typography>
+            </Box>
+            <Box p={1} flexShrink={0}>
+              <IconButton onClick={handleDrawerClose}>
+                {theme.direction === "rtl" ? (
+                  <ChevronRightIcon style={{color:'#fff'}}/>
+                ) : (
+                  <ChevronLeftIcon style={{color:'#fff'}}/>
+                )}
+              </IconButton>
+            </Box>
+          </Box>
+        </Box>
         <Divider />
         <List>
           {links.map((listItem, key) => (
@@ -263,10 +269,10 @@ const MainView = () => {
         </List>
       </Drawer>
       <main className={classes.content}>
-        <div className={classes.toolbar} />
-            <Body />
+        <Box component="div" className={classes.toolbar} />
+        <Body />
       </main>
-    </div>
+    </Box>
   );
 };
 

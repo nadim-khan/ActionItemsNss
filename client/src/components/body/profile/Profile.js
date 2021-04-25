@@ -105,7 +105,9 @@ function Profile() {
   const token = useSelector((state) => state.token);
 
   const users = useSelector((state) => state.users);
-
+  const st = useSelector((state) => {
+    console.log(state)
+  });
   const { user, isAdmin } = auth;
   const [data, setData] = useState(initialState);
   const { name, password, cf_password, err, success } = data;
@@ -122,7 +124,7 @@ function Profile() {
         dispatch(dispatchGetAllUsers(res));
       });
     }
-  }, [token, isAdmin, dispatch, callback]);
+  }, [token, isAdmin, dispatch, ]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

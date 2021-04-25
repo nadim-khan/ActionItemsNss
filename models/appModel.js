@@ -5,38 +5,41 @@ const appSchema = new mongoose.Schema({
     projectName: {
         type: String,
         required: [true, "Please enter the Project Name!"],
-        trim: true
+        trim: true,
+        unique:true
     },
-    taskName: {
-        type: String,
-        required: [true, "Please enter the Task"],
-        trim: true
-    },
-    taskDetails:{
-        type: String,
-        required: [true, "Please provide the task details"],
-        trim: true
-    },
-    createdBy:{
+    taskDetails: [
+        {
+            taskName:{type: String, required: [true, "Please enter the Project Name!"], trim: true},
+            taskAssignedTo:{type: String, required: [true, "Please enter the Project Name!"], trim: true},
+            taskCreatedDate:{type:Date,default: Date.now()},
+            taskStartDate:{type:Date,required:true,default: Date.now()},
+            taskExpectedEndDate:{type:Date, required:true,default: Date.now()},
+        },
+        
+    ],
+    history:[
+        {
+            activity:{type: String, required: true, trim: true},
+            comment:{type: String, required: [true, "Please Provide the comment!"], trim: true},
+            updatedOn:{type:Date,default: Date.now()}
+        }
+    ],
+    projectCreatedBy:{
         type: String,
         required: [true, "Please provide your name!"],
         trim: true
     },
-    assignedTo: {
-        type: String,
-        required: [true, "Please assign someone!"],
-        trim: true
-    },
-    createdDate:{
+    projectCreatedDate:{
         type:Date,
         default: Date.now()
     },
-    startDate:{
+    projectStartDate:{
         type:Date,
         required:true,
         default: Date.now()
     },
-    expectedEndDate:{
+    projectExpectedEndDate:{
         type:Date,
         required:true,
         default: Date.now()
