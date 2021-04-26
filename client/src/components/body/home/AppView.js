@@ -209,7 +209,7 @@ function AppView() {
                       {project.taskDetails.map((task,id)=>
                       <React.Fragment>
                         <Divider/>
-                          taskName : {task.projectName}<br/>
+                          taskName : {task.taskName}<br/>
                           taskAssignedTo : {task.taskAssignedTo}<br/>
                           taskCreatedDate :{task.taskCreatedDate}<br/>
                           taskStartDate : {task.taskStartDate}<br/>

@@ -5,6 +5,7 @@ import {useDispatch} from 'react-redux'
 import { GoogleLogin } from 'react-google-login';
 import GoogleButton from 'react-google-button';
 import {makeStyles,withStyles} from '@material-ui/core/styles';
+import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'    
 import axios from 'axios';
 import {
     Typography,
@@ -149,7 +150,8 @@ const Login = () => {
                     <Typography className={classes.heading} variant="h5">
                         Login
                     </Typography>
-                    
+                    {notification.type ==='error' && showErrMsg(notification.msg)}
+                    {notification.type ==='success' && showSuccessMsg(notification.msg)}
                     <InputField 
                         fullWidth={true}
                         label="Email"

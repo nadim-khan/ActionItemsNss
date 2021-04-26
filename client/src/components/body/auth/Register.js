@@ -10,7 +10,7 @@ import {
     TextField
 } from "@material-ui/core";
 import SendIcon from '@material-ui/icons/Send';
-// import Notification from '../utilities/Notification';
+import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
 import {isEmpty, isEmail, isLength, isMatch} from '../../utils/validation/Validation'
 const useStyles=makeStyles(theme=>({
     form:{
@@ -149,6 +149,8 @@ const Register = () => {
                     <Typography className={classes.heading} variant="h5">
                         Register
                     </Typography>
+                    {notification.type ==='error' && showErrMsg(notification.msg)}
+                    {notification.type ==='success' && showSuccessMsg(notification.msg)}
                     <InputField 
                         fullWidth={true}
                         label="Name"

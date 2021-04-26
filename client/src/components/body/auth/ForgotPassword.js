@@ -3,6 +3,7 @@ import axios from "axios";
 import { isEmail } from "../../utils/validation/Validation";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { Typography, Box, Grid, Button, TextField } from "@material-ui/core";
+import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
 import SendIcon from "@material-ui/icons/Send";
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -112,7 +113,8 @@ const  ForgotPassword=() =>{
           <Typography className={classes.heading} variant="h5">
             Forgot Password
           </Typography>
-
+          {notification.type ==='error' && showErrMsg(notification.msg)}
+                    {notification.type ==='success' && showSuccessMsg(notification.msg)}
           <InputField
             fullWidth={true}
             label="Email"

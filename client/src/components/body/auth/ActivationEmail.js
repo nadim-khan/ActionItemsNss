@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {useParams} from 'react-router-dom'
 import axios from 'axios'
-// import Notification from '../utilities/Notification'
+import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
 const initialNotification = {
     type:'',
     msg:''
@@ -30,7 +30,8 @@ function ActivationEmail() {
     },[activation_token,notification])
 
     return (
-        <></>
+        <>{notification.type ==='error' && showErrMsg(notification.msg)}
+        {notification.type ==='success' && showSuccessMsg(notification.msg)}</>
         // <Notification type={notification.type} msg={notification.msg}/>
     )
 }
