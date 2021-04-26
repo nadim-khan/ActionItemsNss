@@ -3,6 +3,7 @@ import {Link,useHistory} from 'react-router-dom'
 import {dispatchLogin} from '../../../redux/actions/authAction'
 import { useSelector, useDispatch } from "react-redux";
 import {makeStyles,withStyles} from '@material-ui/core/styles';
+import AddIcon from '@material-ui/icons/Add';
 import axios from 'axios';
 import {
     Typography,
@@ -15,10 +16,12 @@ import {
 import SendIcon from '@material-ui/icons/Send';
 const useStyles=makeStyles(theme=>({
     form:{
-        top:'30%',
+        top:'50%',
         left:'50%',
         transform:'translate(-50%, -50%)',
-        position:'absolute'
+        position:'absolute',
+        maxHeight:'60vh',
+        scroll:'auto'
     },
     button:{
         marginTop:'1rem',
@@ -37,6 +40,7 @@ const useStyles=makeStyles(theme=>({
 }))
 const InputField = withStyles({
     root:{
+        width:'100%',
         '& label.Mui-focused':{
             color:'#0747a6',
         },
@@ -66,7 +70,6 @@ const CreateNewApp = () => {
     const history = useHistory()
     const auth = useSelector((state) => state.auth);
     const { user }= auth;
-    console.log('-------------------------------------------->',user)
     const today = new Date();
     const dd = (today.getDate() < 10 ? '0' : '') + today.getDate();
     const mm = ((today.getMonth() + 1) < 10 ? '0' : '') + (today.getMonth() + 1);
@@ -94,6 +97,7 @@ const CreateNewApp = () => {
         msg:''
     }
     const [projectData, setProjectData] = useState(initialState);
+    const [currentTask, setcurrentTask] = useState(initialState.taskDetails);
     const [notification, setNotification] = useState(notificationData);
 
     const { 
@@ -108,7 +112,6 @@ const CreateNewApp = () => {
     } = projectData;
 
     const changeHandler = async(e) => {
-        console.log(e.target.value)
        const {name,value}=e.target;
        setProjectData({...projectData, [name]:value, err:'', success:''});
        setNotification({
@@ -118,17 +121,27 @@ const CreateNewApp = () => {
         })
     }
 
-   const handleTaskChange = () => {
-        // this.setState({
-        //   shareholders: this.state.shareholders.concat([{ name: "" }])
-        // });
-      };
+   const handleTaskInputChange = idx => evt => {
+      
+       const newTask = currentTask.map((task,index)=>{
+        if (idx !== index) return task;
+        return { ...task, [evt.target.name]: evt.target.value };
+       })
+       console.log('newTask : : ',newTask)
+       setcurrentTask({ currentTask: newTask })
+    };
     
-    const handleRemoveTaskChange = idx => () => {
-        // this.setState({
-        //   shareholders: this.state.shareholders.filter((s, sidx) => idx !== sidx)
-        // });
-      };
+    const addCurrentTask = () => {
+        setcurrentTask(oldTask => [...oldTask, {
+            taskName:'',
+            taskDetails:'',
+            taskAssignedTo:'',
+            taskCreatedDate:currDate,
+            taskStartDate:currDate,
+            taskExpectedEndDate:currDate,
+        }])
+        
+    };
 
     const createAppSubmit = async(e) => {
         e.preventDefault();
@@ -157,7 +170,7 @@ const CreateNewApp = () => {
     }
 
     return (
-        <Box component="div" style={{height:'90vh'}}>
+        <Box component="div" style={{maxHeight:'90vh'}}>
         <Grid container justify="center">
         {/* {(notification.type !== '') ? <div><Notification type={notification.type} msg={notification.msg} /><br/></div> : <></>} */}
             <Box component="form" onSubmit={createAppSubmit} className={classes.form} noValidate autoComplete="off">
@@ -226,23 +239,80 @@ const CreateNewApp = () => {
                     />
                     
                     <Divider/>
-                    {projectData.taskDetails.map((task, idx) => (
-                        <div className="shareholder">
+                    {currentTask.map((task, idx) => (
+                        <div className="shareholder" key={idx}>
+                            <Typography>Task #{idx + 1} </Typography>
                             <InputField
+                                label="Task Name"
+                                fullWidth={true}
+                                name="taskName"
                                 type="text"
+                                variant="outlined"
+                                margin="dense"
+                                size="medium"
                                 placeholder={`Task #${idx + 1} name`}
-                                value={task.taskName}
-                                onChange={handleTaskChange(idx)}
+                                defaultValue={task.taskName}
+                                onChange={handleTaskInputChange(idx)}
                             />
-                            <button
-                                type="button"
-                                onClick={handleRemoveTaskChange(idx)}
-                                className="small"
-                            >
-                            -
-                            </button>
+                            <InputField
+                                label="Task Details"
+                                fullWidth={true}
+                                name="taskDetails"
+                                type="text"
+                                variant="outlined"
+                                margin="dense"
+                                size="medium"
+                                placeholder={`Task #${idx + 1} name`}
+                                defaultValue={task.taskDetails}
+                                onChange={handleTaskInputChange(idx)}
+                            />
+                            <InputField
+                                label="Task Assigned to"
+                                fullWidth={true}
+                                name="taskAssignedTo"
+                                type="text"
+                                variant="outlined"
+                                margin="dense"
+                                size="medium"
+                                placeholder={`Task #${idx + 1} taskAssignedTo `}
+                                defaultValue={task.taskAssignedTo}
+                                onChange={handleTaskInputChange(idx)}
+                            />
+                            <InputField
+                                label="Task Start Date"
+                                fullWidth={true}
+                                name="taskStartDate"
+                                type="date"
+                                variant="outlined"
+                                margin="dense"
+                                size="medium"
+                                placeholder={`Task #${idx + 1} name`}
+                                defaultValue={currDate}
+                                onChange={handleTaskInputChange(idx)}
+                            />
+                            <InputField
+                                fullWidth={true}
+                                label="Task End Date"
+                                name="taskExpectedEndDate"
+                                type="date"
+                                variant="outlined"
+                                margin="dense"
+                                size="medium"
+                                placeholder={`Task #${idx + 1} name`}
+                                defaultValue={currDate}
+                                onChange={handleTaskInputChange(idx)}
+                            />
+                            
+                           
                         </div>
                         ))}
+                         <Button
+                                type="button"
+                                onClick={()=>addCurrentTask()}
+                                className="small"
+                            >
+                            <AddIcon/> Add More Task
+                            </Button>
                 <br/>
                 <Button disabled={!projectName && !user.name} className={classes.button} variant="outlined" type="submit" fullWidth={true} endIcon={<SendIcon/>}>Create App</Button>
                
