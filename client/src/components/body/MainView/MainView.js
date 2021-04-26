@@ -20,13 +20,14 @@ import { Link } from "react-router-dom";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
-import MailIcon from "@material-ui/icons/Mail";
-import PersonAddTwoToneIcon from "@material-ui/icons/PersonAddTwoTone";
-import PermIdentityTwoToneIcon from "@material-ui/icons/PermIdentityTwoTone";
-import AddTwoToneIcon from "@material-ui/icons/AddTwoTone";
+import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
+import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
+import PowerSettingsNewTwoToneIcon from '@material-ui/icons/PowerSettingsNewTwoTone';
+import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
+import AddToQueueOutlinedIcon from '@material-ui/icons/AddToQueueOutlined';
 import { AssignmentInd, Home, ContactMail } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
+import logo from '../../../logo.png'
 
 import axios from "axios";
 import Body from "../Body";
@@ -111,21 +112,21 @@ const menuItems = [
     admin: true,
   },
   {
-    listIcon: <AssignmentInd />,
+    listIcon: <AccountCircleOutlinedIcon />,
     listText: "Profile",
     listPath: "/profile",
     user: true,
     admin: true,
   },
   {
-    listIcon: <ContactMail />,
+    listIcon: <PowerSettingsNewTwoToneIcon />,
     listText: "Logout",
     listPath: "/",
     user: true,
     admin: true,
   },
   {
-    listIcon: <AddTwoToneIcon />,
+    listIcon: <AddToQueueOutlinedIcon />,
     listText: "Create Project",
     listPath: "/createApp",
     user: true,
@@ -134,12 +135,12 @@ const menuItems = [
 ];
 const signInItems = [
   {
-    listIcon: <PermIdentityTwoToneIcon />,
+    listIcon: <PersonOutlinedIcon />,
     listText: "Login",
     listPath: "/login",
   },
   {
-    listIcon: <PersonAddTwoToneIcon />,
+    listIcon: <PersonAddOutlinedIcon />,
     listText: "Register",
     listPath: "/register",
   },
@@ -193,6 +194,7 @@ const MainView = () => {
           >
             <MenuIcon />
           </IconButton>
+          <Avatar src={logo} alt="Logo"/>
           <Typography variant="h6" noWrap>
             Action Items
           </Typography>
@@ -257,16 +259,6 @@ const MainView = () => {
           ))}
         </List>
         <Divider />
-        <List>
-          {["All mail", "Trash", "Spam"].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
       </Drawer>
       <main className={classes.content}>
         <Box component="div" className={classes.toolbar} />

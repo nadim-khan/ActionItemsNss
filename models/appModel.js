@@ -11,12 +11,12 @@ const appSchema = new mongoose.Schema({
     taskDetails: [
         {
             taskName:{type: String, required: [true, "Please enter the Project Name!"], trim: true},
+            taskDetails:{type: String, required: [true, "Please enter the Project Name!"], trim: true},
             taskAssignedTo:{type: String, required: [true, "Please enter the Project Name!"], trim: true},
             taskCreatedDate:{type:Date,default: Date.now()},
             taskStartDate:{type:Date,required:true,default: Date.now()},
             taskExpectedEndDate:{type:Date, required:true,default: Date.now()},
-        },
-        
+        }, 
     ],
     history:[
         {
