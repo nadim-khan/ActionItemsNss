@@ -21,7 +21,7 @@ const uploadCtrl = {
 
                 removeTmp(file.tempFilePath)
 
-                res.json({url: result.secure_url})
+                res.json({url: result.secure_url, msg:'Profile picture updated !'})
             })
         
         } catch (err) {

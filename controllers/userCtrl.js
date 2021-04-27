@@ -128,7 +128,7 @@ const userCtrl = {
                 password: passwordHash
             })
 
-            res.json({msg: "Password successfully changed!"})
+            res.json({msg: "Password changed successfully !"})
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
@@ -166,7 +166,7 @@ const userCtrl = {
                 name, avatar
             })
 
-            res.json({msg: "Update Success!"})
+            res.json({msg: "Successfully updated !"})
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
@@ -179,7 +179,7 @@ const userCtrl = {
                 role
             })
 
-            res.json({msg: "Update Success!"})
+            res.json({msg: "Successfully updated !"})
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
@@ -188,7 +188,7 @@ const userCtrl = {
         try {
             await Users.findByIdAndDelete(req.params.id)
 
-            res.json({msg: "Deleted Success!"})
+            res.json({msg: "Successfully Deleted !"})
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
@@ -211,7 +211,7 @@ const userCtrl = {
 
             if(user){
                 const isMatch = await bcrypt.compare(password, user.password)
-                if(!isMatch) return res.status(400).json({msg: "Password is incorrect."})
+                if(!isMatch) return res.status(400).json({msg: "Incorrect Password"})
 
                 const refresh_token = createRefreshToken({id: user._id})
                 res.cookie('refreshtoken', refresh_token, {
@@ -235,7 +235,7 @@ const userCtrl = {
                     maxAge: 7*24*60*60*1000 // 7 days
                 })
 
-                res.json({msg: "Login success!"})
+                res.json({msg: "Succesfully Logged In !"})
             }
 
 
@@ -261,7 +261,7 @@ const userCtrl = {
 
             if(user){
                 const isMatch = await bcrypt.compare(password, user.password)
-                if(!isMatch) return res.status(400).json({msg: "Password is incorrect."})
+                if(!isMatch) return res.status(400).json({msg: "Incorrect Password  ."})
 
                 const refresh_token = createRefreshToken({id: user._id})
                 res.cookie('refreshtoken', refresh_token, {
@@ -270,7 +270,7 @@ const userCtrl = {
                     maxAge: 7*24*60*60*1000 // 7 days
                 })
 
-                res.json({msg: "Login success!"})
+                res.json({msg: "Succesfully Logged In !"})
             }else{
                 const newUser = new Users({
                     name, email, password: passwordHash, avatar: picture.data.url
