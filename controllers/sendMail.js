@@ -42,7 +42,7 @@ const sendEmail = (to, url, txt) => {
         subject: "Action Items @ Internal",
         html: `
             <div style="max-width: 700px; margin:auto; border: 10px solid #ddd; padding: 50px 20px; font-size: 110%;">
-            <h2 style="text-align: center; text-transform: uppercase;color: teal;">Welcome to the DevAT channel.</h2>
+            <h2 style="text-align: center; text-transform: uppercase;color: teal;">Welcome to the Action Items.</h2>
             <p>Congratulations! You're almost set to start using Action Items.
                 Just click the button below to validate your email address.
             </p>
@@ -52,6 +52,9 @@ const sendEmail = (to, url, txt) => {
             <p>If the button doesn't work for any reason, you can also click on the link below:</p>
         
             <div>${url}</div>
+            <br/><br/>
+            <div>Thanks and Regards,</div>
+            <div>Nadeem Khan</div>
             </div>
         `
     }

@@ -25,8 +25,8 @@ import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
 import PowerSettingsNewTwoToneIcon from '@material-ui/icons/PowerSettingsNewTwoTone';
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import AddToQueueOutlinedIcon from '@material-ui/icons/AddToQueueOutlined';
-import { AssignmentInd, Home, ContactMail } from "@material-ui/icons";
-import { useDispatch, useSelector } from "react-redux";
+import {  Home } from "@material-ui/icons";
+import { useSelector } from "react-redux";
 import logo from '../../../logo.png'
 
 import axios from "axios";
@@ -108,32 +108,29 @@ const menuItems = [
     listIcon: <Home />,
     listText: "Home",
     listPath: "/",
-    user: true,
-    admin: true,
   },
   {
     listIcon: <AccountCircleOutlinedIcon />,
     listText: "Profile",
     listPath: "/profile",
-    user: true,
-    admin: true,
   },
   {
     listIcon: <PowerSettingsNewTwoToneIcon />,
     listText: "Logout",
     listPath: "/",
-    user: true,
-    admin: true,
   },
   {
     listIcon: <AddToQueueOutlinedIcon />,
     listText: "Create Project",
     listPath: "/createApp",
-    user: true,
-    admin: true,
   },
 ];
 const signInItems = [
+  {
+    listIcon: <Home />,
+    listText: "Home",
+    listPath: "/"
+  },
   {
     listIcon: <PersonOutlinedIcon />,
     listText: "Login",
@@ -150,8 +147,6 @@ const MainView = () => {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const dispatch = useDispatch();
-  const token = useSelector((state) => state.token);
   const auth = useSelector((state) => state.auth);
   const { user, isLogged } = auth;
   const links = isLogged && user ? menuItems : signInItems;

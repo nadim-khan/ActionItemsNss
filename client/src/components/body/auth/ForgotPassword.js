@@ -54,8 +54,6 @@ const InputField = withStyles({
 
 const initialState = {
   email: "",
-  err: "",
-  success: "",
 };
 const initialNotification = {
     type:'',
@@ -67,30 +65,30 @@ const  ForgotPassword=() =>{
   const [data, setData] = useState(initialState);
   const [notification, setNotification] = useState(initialNotification)
 
-  const { email, err, success } = data;
+  const { email } = data;
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
-    setData({ ...data, [name]: value, err: "", success: "" });
+    setData({ ...data, [name]: value });
   };
 
   const forgotPassword = async () => {
     if (!isEmail(email)) {
         setNotification({...notification,type:'error',msg:'Invalid emails.'});
-        setData({ ...data, err: "Invalid emails.", success: "" });
+        setData({ ...data });
         return
     }
     try {
       const res = await axios.post("/user/forgot", { email });
       if(res) {
-        setData({ ...data, err: "", success: res.data.msg });
+        setData({ ...data});
         setNotification({...notification,type:'success',msg:res.data.msg});
         return 
       }
     } catch (err) {
         setNotification({...notification,type:'error',msg:err.response.data.msg});
       err.response.data.msg &&
-        setData({ ...data, err: err.response.data.msg, success: "" });
+        setData({ ...data});
     }
   };
 

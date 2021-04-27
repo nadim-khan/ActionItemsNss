@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
-import { dispatchLogin } from "../../../redux/actions/authAction";
-import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
 import axios from "axios";
@@ -17,8 +16,7 @@ import {
   Grid,
   Button,
   TextField,
-  Divider,
-  Paper,
+  Divider
 } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 const useStyles = makeStyles((theme) => ({
@@ -68,7 +66,6 @@ const InputField = withStyles({
 
 const CreateNewApp = () => {
   const classes = useStyles();
-  const dispatch = useDispatch();
   const history = useHistory();
   const auth = useSelector((state) => state.auth);
   const { user } = auth;
@@ -92,8 +89,7 @@ const CreateNewApp = () => {
         taskExpectedEndDate: currDate,
       },
     ],
-    success: "",
-    err: "",
+    history:[],
   };
   const notificationData = {
     type: "",
@@ -112,16 +108,13 @@ const CreateNewApp = () => {
     projectCreatedBy,
     projectExpectedEndDate,
     projectCreatedDate,
-    taskDetails,
-    err,
-    success,
   } = projectData;
 
   const changeHandler = async (e) => {
 
     const { name, value } = e.target;
     setSaveStatus(false);
-    setProjectData({ ...projectData, [name]: value, err: "", success: "" });
+    setProjectData({ ...projectData, [name]: value});
     setNotification({
       ...notification,
       type: "",
@@ -169,25 +162,26 @@ const CreateNewApp = () => {
 
   const createAppSubmit = async (e) => {
     e.preventDefault();
+    window.scrollTo(0, 0)
     setNotification({
       ...notification,
       type: "",
       msg: "",
     });
     try {
+        
         if(!saved) {
             setProjectData({
                 ...projectData,
                 projectCreatedBy: user.name,
                 taskDetails: currentTask,
-                err: "",
-                success: "",
             });
             setNotification({...notification,type:'success',msg:'Data Saved Successfully '})
             setSaveStatus(true);
         } else {
             const response= await axios.post('/app/register',projectData);
-            setNotification({...notification,type:'success',msg:response.data.msg})
+            setNotification({...notification,type:'success',msg:response.data.msg});
+            history.push('/');
         }
     } catch (err) {
       err.response.data.msg && setProjectData({...projectData, err:err.response.data.msg, success:''});

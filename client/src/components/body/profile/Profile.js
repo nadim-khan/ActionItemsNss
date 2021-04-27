@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
 import { isLength, isMatch } from "../../utils/validation/Validation";
 import {
   showSuccessMsg,
@@ -103,11 +102,6 @@ function Profile() {
   const classes = useStyles();
   const auth = useSelector((state) => state.auth);
   const token = useSelector((state) => state.token);
-
-  const users = useSelector((state) => state.users);
-  const st = useSelector((state) => {
-    console.log(state)
-  });
   const { user, isAdmin } = auth;
   const [data, setData] = useState(initialState);
   const { name, password, cf_password, err, success } = data;
@@ -337,6 +331,16 @@ function Profile() {
               endIcon={<SendIcon />}
             >
               Update
+            </Button>
+            <Button
+              disabled={loading}
+              className={classes.button}
+              variant="outlined"
+              fullWidth={true}
+              endIcon={<SendIcon />}
+              onClick={handleDelete(user._id)}
+            >
+              Delete
             </Button>
           </Box>
         </Grid>

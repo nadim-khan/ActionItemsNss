@@ -56,8 +56,6 @@ const InputField = withStyles({
 const initialState = {
   password: "",
   cf_password: "",
-  err: "",
-  success: "",
 };
 const initialNotification = {
   type: "",
@@ -70,23 +68,19 @@ const ResetPassword=()=> {
   const { token } = useParams();
   const [notification, setNotification] = useState(initialNotification);
 
-  const { password, cf_password, err, success } = data;
+  const { password, cf_password } = data;
 
   const changeHandler = (e) => {
     const { name, value } = e.target;
-    setData({ ...data, [name]: value, err: "", success: "" });
+    setData({ ...data, [name]: value});
   };
 
   const handleResetPass = async () => {
     if (isLength(password))
-      return setData({
-        ...data,
-        err: "Password must be at least 6 characters.",
-        success: "",
-      });
+      return setNotification({...notification,type:'error',msg:'Password must be at least 6 characters.'});
 
     if (!isMatch(password, cf_password))
-      return setData({ ...data, err: "Password did not match.", success: "" });
+      return setNotification({...notification,type:'error',msg:'Password did not match.'});
 
     try {
       const res = await axios.post(
@@ -98,14 +92,14 @@ const ResetPassword=()=> {
       );
       if(res) {
         setNotification({...notification,type:'success',msg:res.data.msg});
-        setData({ ...data, err: "", success: res.data.msg });
+        setData({ ...data });
         return 
       }
       
     } catch (err) {
         setNotification({...notification,type:'error',msg: err.response.data.msg});
       err.response.data.msg &&
-        setData({ ...data, err: err.response.data.msg, success: "" });
+        setData({ ...data});
     }
   };
 

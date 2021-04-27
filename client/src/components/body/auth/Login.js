@@ -64,8 +64,6 @@ const InputField = withStyles({
 const initialState = {
     email:'',
     password:'',
-    err:'',
-    success:''
 }
 const notificationData = {
     type:'',
@@ -78,7 +76,7 @@ const Login = () => {
     const [user, setUser] = useState(initialState);
     const [notification, setNotification] = useState(notificationData);
 
-    const { email, password, err, success} = user;
+    const { email, password} = user;
 
     const changeHandler = async(e) => {
        const {name,value}=e.target;
@@ -100,8 +98,8 @@ const Login = () => {
         try{
             const response= await axios.post('/user/login',{email,password});
 
-            setUser({...user, err:'', success:response.data.msg});
-            setNotification({...notification,type:'success',msg:'Successfully Logged In'})
+            setUser({...user});
+            setNotification({...notification,type:'success',msg:response.data.msg})
 
             localStorage.setItem('firstLogin', true);
 
@@ -109,7 +107,7 @@ const Login = () => {
             // history.push('/')
 
         } catch(err) {
-            err.response.data.msg && setUser({...user, err:err.response.data.msg, success:''});
+            err.response.data.msg && setUser({...user});
             setNotification({ ...notification,type:'error', msg:err.response.data.msg})
         }
     }
@@ -118,9 +116,9 @@ const Login = () => {
         try {
             const res = await axios.post('/user/google_login', {tokenId: response.tokenId})
 
-            setUser({...user, error:'', success: res.data.msg})
+            setUser({...user})
             localStorage.setItem('firstLogin', true)
-            if(success) {
+            if(res) {
                 setNotification({
                     ...notification,
                     type:'success',

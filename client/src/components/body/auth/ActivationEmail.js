@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import {useParams} from 'react-router-dom'
+import {useParams,useHistory} from 'react-router-dom'
 import axios from 'axios'
 import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
 const initialNotification = {
@@ -7,6 +7,7 @@ const initialNotification = {
     msg:''
 }
 function ActivationEmail() {
+    const history = useHistory()
     const {activation_token} = useParams()
     const [notification, setNotification] = useState(initialNotification)
 
@@ -25,14 +26,21 @@ function ActivationEmail() {
                     return
                 }
             }
-           //   activationEmail()
+             activationEmail();
+             setTimeout(()=>{
+                 if(notification.type==='error')
+                    history.push('/register')
+                else
+                    history.push('/login')
+                 window.close();
+             },3000)
         }
-    },[activation_token,notification])
+    },[activation_token])
 
     return (
         <>{notification.type ==='error' && showErrMsg(notification.msg)}
         {notification.type ==='success' && showSuccessMsg(notification.msg)}</>
-        // <Notification type={notification.type} msg={notification.msg}/>
+        
     )
 }
 

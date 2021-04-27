@@ -6,16 +6,25 @@ const {CLIENT_URL} = process.env
 const appCtrl = {
     register: async (req, res) => {
         try {
-            console.log(req.body)
             const {
                 projectName,
-                taskDetails,
-                history:history,
                 projectCreatedBy,
                 projectCreatedDate,
                 projectStartDate,
-                projectExpectedEndDate
+                projectExpectedEndDate,
+                taskDetails
             } = req.body
+            let history = [];
+            history.push(
+                {
+                    activity:`Project <strong>${projectName}</strong> Initialized`,
+                    updatedOn: new Date()
+                },{
+                    activity:`<strong>${projectCreatedBy}</strong> has added <strong> ${taskDetails.length} ${taskDetails.length < 2 ? 'task' : 'tasks'} </strong>`,
+                    updatedOn: new Date()
+                }
+            )
+            console.log('1',history)
             
             if(!projectName|| !projectCreatedBy)
                 return res.status(400).json({msg: "Please fill in all fields."})

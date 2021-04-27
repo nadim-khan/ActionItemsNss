@@ -10,6 +10,7 @@ const appSchema = new mongoose.Schema({
     },
     taskDetails: [
         {
+            taskId:{type: String,trim: true},
             taskName:{type: String, required: [true, "Please enter the Project Name!"], trim: true},
             taskDetails:{type: String, required: [true, "Please enter the Project Name!"], trim: true},
             taskAssignedTo:{type: String, required: [true, "Please enter the Project Name!"], trim: true},
@@ -21,7 +22,7 @@ const appSchema = new mongoose.Schema({
     history:[
         {
             activity:{type: String, required: true, trim: true},
-            comment:{type: String, required: [true, "Please Provide the comment!"], trim: true},
+            comment:{type: String, trim: true},
             updatedOn:{type:Date,default: Date.now()}
         }
     ],

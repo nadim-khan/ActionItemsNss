@@ -17,16 +17,10 @@ import TimelineConnector from "@material-ui/lab/TimelineConnector";
 import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
-import FastfoodIcon from "@material-ui/icons/Fastfood";
-import LaptopMacIcon from "@material-ui/icons/LaptopMac";
-import HotelIcon from "@material-ui/icons/Hotel";
-import RepeatIcon from "@material-ui/icons/Repeat";
-import Paper from "@material-ui/core/Paper";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
 import Info from "./Info";
 import Spinner from "../../utils/Spinner/Spinner";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
@@ -141,23 +135,29 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
+const changeDateFormat=(old)=>{
+  const date =new Date(old);
+  return `${date.toLocaleString([], { hour12: true})}`
+}
 
 function AppView() {
   const classes = useStyles();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const token = useSelector((state) => state.token);
-  const users = useSelector((state) => state.users);
   const projects = useSelector((state) => state.projects);
-  const { user, isAdmin, isLogged } = auth;
-  const [loading, setLoading] = useState(false);
-  const [currentProject, setcurrentProject] = useState({});
+  const { user, isLogged } = auth;
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (token) {
+    setLoading(true)
+    if (isLogged) {
       fetchAllProject(token).then((res) => {
+        setLoading(false)
         dispatch(dispatchAllProject(res));
       });
+    } else {
+      setLoading(false)
     }
   }, [token, dispatch]);
 
@@ -227,10 +227,11 @@ function AppView() {
                         History
                       </Typography>
                       <Timeline align="left" className={classes.historyDetails}>
-                        <TimelineItem>
+                        {project.history.map((item,hId)=>
+                          <TimelineItem key={hId}>
                           <TimelineOppositeContent>
                             <Typography color="textSecondary">
-                              26/04/2021 09:30 am
+                              {changeDateFormat(item.updatedOn)}
                             </Typography>
                           </TimelineOppositeContent>
                           <TimelineSeparator>
@@ -238,38 +239,23 @@ function AppView() {
                             <TimelineConnector />
                           </TimelineSeparator>
                           <TimelineContent>
-                            <Typography>Created Project</Typography>
+                            <Typography dangerouslySetInnerHTML={{ __html: `${item.activity}` }}></Typography>
                           </TimelineContent>
                         </TimelineItem>
-                        <TimelineItem>
-                          <TimelineOppositeContent>
-                            <Typography color="textSecondary">
-                            26/04/2021 10:00 am
-                            </Typography>
-                          </TimelineOppositeContent>
-                          <TimelineSeparator>
-                            <TimelineDot />
-                            <TimelineConnector />
-                          </TimelineSeparator>
-                          <TimelineContent>
-                            <Typography>Updated Task endDate</Typography>
-                          </TimelineContent>
-                        </TimelineItem>
+                        )}
                       </Timeline>
                     </Box>
                   </AccordionDetails>
                   <Divider />
                   <AccordionActions>
-                    <Button size="small" color="secondary">Cancel</Button>
-                    <Button size="small" color="primary">
-                      Save
-                    </Button>
-                    <Button size="small" color="primary">
+                    <Button size="small" variant="contained" color="secondary">Delete Project</Button>
+                    <Button size="small" variant="contained" color="primary">
                       Update
                     </Button>
                   </AccordionActions>
                 </Accordion>
               ))}
+              
             </Box>
           ) : (
             "No Projects so far"

@@ -64,8 +64,6 @@ const initialState = {
     email:'',
     password:'',
     confirmPassword:'',
-    err:'',
-    success:''
 }
 const notificationData = {
     type:'',
@@ -78,11 +76,11 @@ const Register = () => {
     const [user, setUser] = useState(initialState);
     const [notification, setNotification] = useState(notificationData);
 
-    const { name, email, password, confirmPassword, err, success} = user;
+    const { name, email, password, confirmPassword} = user;
 
     const changeHandler = async(e) => {
        const {name,value}=e.target;
-       setUser({...user, [name]:value, err:'', success:''});
+       setUser({...user, [name]:value});
        setNotification({
             ...notification,
             type:'',
@@ -94,27 +92,27 @@ const Register = () => {
         e.preventDefault();
         
         if(isEmpty(name) || isEmpty(password) || isEmpty(email)) {
-            setUser({...user, err: "Please fill in all fields.", success: ''})
+            setUser({...user})
             setNotification({...notification, type:'error', msg:'Please fill in all fields.'})
             return
         }
                
                
         if(!isEmail(email)) {
-            setUser({...user, err: "Invalid emails.", success: ''})
+            setUser({...user})
             setNotification({...notification, type:'error', msg:'Invalid emails.'})
             return
         }
              
         if(isLength(password)) {
-            setUser({...user, err: "Password must be at least 6 characters.", success: ''})
+            setUser({...user})
             setNotification({...notification, type:'error', msg:'Password must be at least 6 characters.'})
             return
         }
              
         
         if(!isMatch(password, confirmPassword)) {
-            setUser({...user, err: "Password did not match.", success: ''})
+            setUser({...user})
             setNotification({...notification, type:'error', msg:'Password did not match.'})
             return
         }
@@ -122,7 +120,7 @@ const Register = () => {
         try{
             
             const response= await axios.post('/user/register',{name, email, password});
-            setUser({...user, err:'', success:response.data.msg});
+            setUser({...user});
             if(response) {
                 setNotification({
                     ...notification,
@@ -131,7 +129,7 @@ const Register = () => {
                 })
             }
         } catch(err) {
-            err.response.data.msg && setUser({...user, err:err.response.data.msg, success:''});
+            err.response.data.msg && setUser({...user});
             setNotification({
                 ...notification,
                 type:'error',
