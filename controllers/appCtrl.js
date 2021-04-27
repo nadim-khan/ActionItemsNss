@@ -24,7 +24,6 @@ const appCtrl = {
                     updatedOn: new Date()
                 }
             )
-            console.log('1',history)
             
             if(!projectName|| !projectCreatedBy)
                 return res.status(400).json({msg: "Please fill in all fields."})
@@ -72,8 +71,16 @@ const appCtrl = {
         } catch (err) {
             return res.status(500).json({msg: err.message})
         }
-    }
+    },
     
+    deleteApp: async (req,res) =>{
+        try {
+            await App.findByIdAndDelete(req.params.id)
+            res.json({msg: "Successfully Deleted !"})
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    }
 }
 
 

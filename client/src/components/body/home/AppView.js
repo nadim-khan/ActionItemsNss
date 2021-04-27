@@ -27,6 +27,8 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import {
   dispatchAllProject,
   fetchAllProject,
+  deleteOneProject,
+  dispatchDeleteProject
 } from "../../../redux/actions/projectAction";
 
 const useStyles = makeStyles((theme) => ({
@@ -140,6 +142,11 @@ const changeDateFormat=(old)=>{
   return `${date.toLocaleString([], { hour12: true})}`
 }
 
+const notificationData = {
+  type: "",
+  msg: "",
+};
+
 function AppView() {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -148,18 +155,36 @@ function AppView() {
   const projects = useSelector((state) => state.projects);
   const { user, isLogged } = auth;
   const [loading, setLoading] = useState(true);
+  const [notification, setNotification] = useState(notificationData);
 
   useEffect(() => {
     setLoading(true)
     if (isLogged) {
-      fetchAllProject(token).then((res) => {
+      getAllProjects()
+    } else {
+      setLoading(false)
+    }
+  }, [token, dispatch,isLogged]);
+
+  const getAllProjects = () =>{
+    fetchAllProject(token).then((res) => {
+      setLoading(false)
+      dispatch(dispatchAllProject(res));
+    });
+  }
+
+  const deleteProject=(id)=>{
+    setLoading(true)
+    if (isLogged) {
+      deleteOneProject(token,id).then((res) => {
         setLoading(false)
-        dispatch(dispatchAllProject(res));
+        dispatch(dispatchDeleteProject(res));
+        getAllProjects();
       });
     } else {
       setLoading(false)
     }
-  }, [token, dispatch]);
+  }
 
   return (
     <>
@@ -207,7 +232,7 @@ function AppView() {
                       projectStartDate : {project.projectStartDate}<br/>
                       projectExpectedEndDate : {project.projectExpectedEndDate}<br/>
                       {project.taskDetails.map((task,id)=>
-                      <React.Fragment>
+                      <React.Fragment key={id}>
                         <Divider/>
                           taskName : {task.taskName}<br/>
                           taskAssignedTo : {task.taskAssignedTo}<br/>
@@ -248,7 +273,7 @@ function AppView() {
                   </AccordionDetails>
                   <Divider />
                   <AccordionActions>
-                    <Button size="small" variant="contained" color="secondary">Delete Project</Button>
+                    <Button size="small" variant="contained" color="secondary" onClick={()=>deleteProject(project._id)}>Delete Project</Button>
                     <Button size="small" variant="contained" color="primary">
                       Update
                     </Button>

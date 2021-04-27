@@ -130,11 +130,9 @@ const CreateNewApp = () => {
       if (idx !== index) return task;
       return { ...task, [evt.target.name]: evt.target.value };
     });
-    console.log("newTask : : ", newTask);
     setcurrentTask(newTask);
     //Validation
     const { taskAssignedTo, taskDetails, taskName } = newTask[idx];
-    console.log(taskAssignedTo, taskDetails, taskName);
     if (taskAssignedTo !== "" && taskDetails !== "" && taskName !== "") {
       setButton(false);
       setSubmitButton(false);

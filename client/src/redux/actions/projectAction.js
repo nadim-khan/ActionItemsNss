@@ -9,6 +9,7 @@ export const fetchOneProject = async (token,id) => {
     return res
 }
 
+// All Projects Data
 export const fetchAllProject = async (token) => {
     const res = await axios.get('/app/getAllApps', {
         headers: {Authorization: token}
@@ -23,3 +24,18 @@ export const dispatchAllProject = (res) => {
     }
 }
 
+//Delete Single Project
+
+export const deleteOneProject = async (token,projectId) => {
+    const res = await axios.delete(`/app/deleteApp/${projectId}`, {
+        headers: {Authorization: token}
+    })
+    return res
+}
+
+export const dispatchDeleteProject = (res) => {
+    return {
+        type: ACTIONS.DELETE_ONE_PROJECT,
+        payload: res.data
+    }
+}

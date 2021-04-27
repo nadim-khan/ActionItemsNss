@@ -7,5 +7,7 @@ router.post('/register', appCtrl.register)
 
 router.get('/getAllApps', appCtrl.getAllApps)
 
+router.delete('/deleteApp/:id', appCtrl.deleteApp)
+
 
 module.exports = router
