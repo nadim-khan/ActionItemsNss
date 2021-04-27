@@ -190,6 +190,7 @@ const CreateNewApp = () => {
   return (
     <Box component="div" style={{ maxHeight: "90vh" }}>
       <Grid container justify="center">
+        
         {/* {(notification.type !== '') ? <div><Notification type={notification.type} msg={notification.msg} /><br/></div> : <></>} */}
         <Box
           component="form"
@@ -201,6 +202,8 @@ const CreateNewApp = () => {
           <Typography className={classes.heading} variant="h5">
             Create New Project
           </Typography>
+          {notification.type==="error" && showErrMsg(notification.msg)}
+        {notification.type==="success" && showSuccessMsg(notification.msg)}
           {notification.type ==='error' && showErrMsg(notification.msg)}
         {notification.type ==='success' && showSuccessMsg(notification.msg)}
           <InputField

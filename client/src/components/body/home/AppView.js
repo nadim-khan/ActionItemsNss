@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
 import {
   Accordion,
   AccordionDetails,
@@ -177,7 +178,8 @@ function AppView() {
     setLoading(true)
     if (isLogged) {
       deleteOneProject(token,id).then((res) => {
-        setLoading(false)
+        setLoading(false);
+        setNotification({type:"success",msg:"Project Deleted Successfully !"})
         dispatch(dispatchDeleteProject(res));
         getAllProjects();
       });
@@ -189,6 +191,8 @@ function AppView() {
   return (
     <>
       {loading ? <Spinner /> : <></>}
+      {notification.type==="error" && showErrMsg(notification.msg)}
+        {notification.type==="success" && showSuccessMsg(notification.msg)}
       {isLogged ? (
         <>
           {projects.length ? (
