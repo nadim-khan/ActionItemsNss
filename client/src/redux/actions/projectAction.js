@@ -39,3 +39,20 @@ export const dispatchDeleteProject = (res) => {
         payload: res.data
     }
 }
+
+//Update Single Project
+
+export const updateOneProject = async (token,projectId) => {
+    const res = await axios.update(`/app/deleteApp/${projectId}`, {
+        headers: {Authorization: token}
+    })
+    return res
+}
+
+export const dispatchUpdateProject = (res) => {
+    return {
+        type: ACTIONS.UPDATE_ONE_PROJECT,
+        payload: res.data
+    }
+}
+

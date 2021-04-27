@@ -7,7 +7,8 @@ const projectsReducer = (state = projects, action) => {
         case ACTIONS.GET_ALL_PROJECTS:
             return action.payload
         case ACTIONS.DELETE_ONE_PROJECT:
-            console.log('Delete reducer : ',action,state)
+            return action.payload
+        case ACTIONS.UPDATE_ONE_PROJECT:
             return action.payload
         default:
             return state

@@ -64,29 +64,33 @@ const InputField = withStyles({
   },
 })(TextField);
 
-const CreateNewApp = () => {
+const CreateNewApp = (props) => {
+  console.log('Is props available : ',props)
   const classes = useStyles();
   const history = useHistory();
   const auth = useSelector((state) => state.auth);
   const { user } = auth;
-  const today = new Date();
-  const dd = (today.getDate() < 10 ? "0" : "") + today.getDate();
-  const mm = (today.getMonth() + 1 < 10 ? "0" : "") + (today.getMonth() + 1);
-  const currDate = `${today.getUTCFullYear()}-${mm}-${dd}`;
-  const initialState = {
+  const formattedDate = (date) =>{
+    const today = new Date(date);
+    const dd = (today.getDate() < 10 ? "0" : "") + today.getDate();
+    const mm = (today.getMonth() + 1 < 10 ? "0" : "") + (today.getMonth() + 1);
+    const currDate = `${today.getUTCFullYear()}-${mm}-${dd}`;
+    return currDate
+  }
+  let initialState = {
     projectName: "",
-    projectStartDate: currDate,
-    projectExpectedEndDate: currDate,
+    projectStartDate: formattedDate(new Date()),
+    projectExpectedEndDate: formattedDate(new Date()),
     projectCreatedBy: user.name,
-    projectCreatedDate: currDate,
+    projectCreatedDate: formattedDate(new Date()),
     taskDetails: [
       {
         taskName: "",
         taskDetails: "",
         taskAssignedTo: "",
-        taskCreatedDate: currDate,
-        taskStartDate: currDate,
-        taskExpectedEndDate: currDate,
+        taskCreatedDate: formattedDate(new Date()),
+        taskStartDate: formattedDate(new Date()),
+        taskExpectedEndDate: formattedDate(new Date()),
       },
     ],
     history:[],
@@ -95,11 +99,15 @@ const CreateNewApp = () => {
     type: "",
     msg: "",
   };
+  if(props.projectData) {
+    initialState = props.projectData
+  }
   const [projectData, setProjectData] = useState(initialState);
   const [currentTask, setcurrentTask] = useState(initialState.taskDetails);
   const [notification, setNotification] = useState(notificationData);
   const [disableTaskButton, setButton] = useState(true);
   const [disableSubmitButton, setSubmitButton] = useState(true);
+  const [expanded, setExpanded] = useState(false);
   const [saved, setSaveStatus] = useState(false);
 
   const {
@@ -151,9 +159,9 @@ const CreateNewApp = () => {
         taskName: "",
         taskDetails: "",
         taskAssignedTo: "",
-        taskCreatedDate: currDate,
-        taskStartDate: currDate,
-        taskExpectedEndDate: currDate,
+        taskCreatedDate: formattedDate(new Date()),
+        taskStartDate: formattedDate(new Date()),
+        taskExpectedEndDate: formattedDate(new Date()),
       },
     ]);
   };
@@ -187,6 +195,12 @@ const CreateNewApp = () => {
     }
   };
 
+
+
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
   return (
     <Box component="div" style={{ maxHeight: "90vh" }}>
       <Grid container justify="center">
@@ -200,35 +214,34 @@ const CreateNewApp = () => {
           autoComplete="off"
         >
           <Typography className={classes.heading} variant="h5">
-            Create New Project
+            {props.projectData ? 'Update Project Details' : 'Create New Project'}
           </Typography>
           {notification.type==="error" && showErrMsg(notification.msg)}
         {notification.type==="success" && showSuccessMsg(notification.msg)}
-          {notification.type ==='error' && showErrMsg(notification.msg)}
-        {notification.type ==='success' && showSuccessMsg(notification.msg)}
           <InputField
-            fullWidth={true}
             label="Project Name"
+            fullWidth={true}
             name="projectName"
             type="text"
-            InputProps={{ style: { color: "#0747a6" } }}
             variant="outlined"
             margin="dense"
             size="medium"
             defaultValue={projectName}
+            InputProps={{ style: { color: "#0747a6" } }}
             onChange={changeHandler}
           />
           <InputField
-            fullWidth={true}
             label="Project Start Date"
+            fullWidth={true}
             name="projectStartDate"
             type="date"
-            InputProps={{ style: { color: "#0747a6" } }}
-            defaultValue={projectStartDate}
             variant="outlined"
             margin="dense"
             size="medium"
+            defaultValue={formattedDate(projectStartDate)}
+            InputProps={{ style: { color: "#0747a6" } }}
             onChange={changeHandler}
+            
           />
           <InputField
             fullWidth={true}
@@ -236,7 +249,7 @@ const CreateNewApp = () => {
             name="projectExpectedEndDate"
             type="date"
             InputProps={{ style: { color: "#0747a6" } }}
-            defaultValue={projectExpectedEndDate}
+            defaultValue={formattedDate(projectExpectedEndDate)}
             variant="outlined"
             margin="dense"
             size="medium"
@@ -258,7 +271,7 @@ const CreateNewApp = () => {
             name="projectCreatedDate"
             type="date"
             InputProps={{ style: { display: "none" } }}
-            defaultValue={projectCreatedDate}
+            defaultValue={formattedDate(projectCreatedDate)}
             variant="outlined"
             margin="dense"
             size="medium"
@@ -267,7 +280,7 @@ const CreateNewApp = () => {
 
           {currentTask.map((task, idx) => (
             <div className={classes.root} key={idx}>
-              <Accordion>
+              <Accordion expanded={expanded === `panel${idx+1}`} onChange={handleExpand(`panel${idx+1}`)}>
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
@@ -327,7 +340,7 @@ const CreateNewApp = () => {
                     margin="dense"
                     size="medium"
                     placeholder={`Task #${idx + 1} name`}
-                    defaultValue={currDate}
+                    defaultValue={formattedDate(task.taskStartDate)}
                     onChange={handleTaskInputChange(idx)}
                   />
                   <br />
@@ -340,7 +353,7 @@ const CreateNewApp = () => {
                     margin="dense"
                     size="medium"
                     placeholder={`Task #${idx + 1} name`}
-                    defaultValue={currDate}
+                    defaultValue={formattedDate(task.taskExpectedEndDate)}
                     onChange={handleTaskInputChange(idx)}
                   />
                   <br />

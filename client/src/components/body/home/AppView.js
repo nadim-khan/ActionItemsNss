@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
+import {
+  showErrMsg,
+  showSuccessMsg,
+} from "../../utils/notification/Notification";
 import {
   Accordion,
   AccordionDetails,
@@ -8,6 +11,7 @@ import {
   Button,
   Box,
   Divider,
+  Paper,
   Avatar,
   Typography,
 } from "@material-ui/core";
@@ -29,8 +33,9 @@ import {
   dispatchAllProject,
   fetchAllProject,
   deleteOneProject,
-  dispatchDeleteProject
+  dispatchDeleteProject,
 } from "../../../redux/actions/projectAction";
+import CreateNewApp from "./CreateNewApp";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,14 +67,24 @@ const useStyles = makeStyles((theme) => ({
     fontSize: theme.typography.pxToRem(15),
     padding: theme.spacing(1, 1),
   },
+  headingTask: {
+    fontSize: theme.typography.pxToRem(15),
+    flexBasis: "33.33%",
+    flexShrink: 0,
+  },
+  secondaryHeadingTask: {
+    fontSize: theme.typography.pxToRem(15),
+    color: theme.palette.text.secondary,
+  },
   icon: {
     verticalAlign: "bottom",
     height: 20,
     width: 20,
   },
   taskDetails: {
-    maxHeight:"55vh",
-    overflow:'auto',
+    maxHeight: "55vh",
+    paddingRight:"1rem",
+    overflow: "auto",
     "&::-webkit-scrollbar": {
       width: "0.5em",
     },
@@ -85,8 +100,8 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   historyDetails: {
-    maxHeight:"55vh",
-    overflow:'auto',
+    maxHeight: "55vh",
+    overflow: "auto",
     "&::-webkit-scrollbar": {
       width: "0.5em",
     },
@@ -138,10 +153,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-const changeDateFormat=(old)=>{
-  const date =new Date(old);
-  return `${date.toLocaleString([], { hour12: true})}`
-}
+const changeDateFormat = (old) => {
+  const date = new Date(old);
+  return `${date.toLocaleString([], { hour12: true })}`;
+};
 
 const notificationData = {
   type: "",
@@ -157,48 +172,66 @@ function AppView() {
   const { user, isLogged } = auth;
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState(notificationData);
+  const [expanded, setExpanded] = useState(false);
+  const [isUpdate, setUpdate] = useState(false);
 
   useEffect(() => {
-    setLoading(true)
+    setLoading(true);
     if (isLogged) {
-      getAllProjects()
+      getAllProjects();
     } else {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [token, dispatch,isLogged]);
+  }, [token, dispatch, isLogged]);
 
-  const getAllProjects = () =>{
+  const getAllProjects = () => {
     fetchAllProject(token).then((res) => {
-      setLoading(false)
+      setLoading(false);
       dispatch(dispatchAllProject(res));
     });
-  }
+  };
 
-  const deleteProject=(id)=>{
-    setLoading(true)
+  const deleteProject = (id) => {
+    setLoading(true);
     if (isLogged) {
-      deleteOneProject(token,id).then((res) => {
+      deleteOneProject(token, id).then((res) => {
         setLoading(false);
-        setNotification({type:"success",msg:"Project Deleted Successfully !"})
+        setUpdate(false);
+        setNotification({
+          type: "success",
+          msg: "Project Deleted Successfully !",
+        });
         dispatch(dispatchDeleteProject(res));
         getAllProjects();
       });
     } else {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+
+  const handleExpand = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
+  const updateProject = (id) => {
+    setUpdate(!isUpdate);
+  };
 
   return (
     <>
       {loading ? <Spinner /> : <></>}
-      {notification.type==="error" && showErrMsg(notification.msg)}
-        {notification.type==="success" && showSuccessMsg(notification.msg)}
+      {notification.type === "error" && showErrMsg(notification.msg)}
+      {notification.type === "success" && showSuccessMsg(notification.msg)}
       {isLogged ? (
         <>
           {projects.length ? (
             <Box component="div" className={classes.mainView}>
               {projects.map((project, index) => (
-                <Accordion key={index}>
+                <Accordion
+                  key={index}
+                  expanded={expanded === `panel${index + 1}`}
+                  onChange={handleExpand(`panel${index + 1}`)}
+                >
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1c-content"
@@ -229,23 +262,64 @@ function AppView() {
                       <Typography variant="h6" align="center">
                         Task Details
                       </Typography>
+
                       <Box comonent="div" className={classes.taskDetails}>
-                      projectName: {project.projectName}<br/>
-                      projectCreatedBy : {project.projectCreatedBy}<br/>
-                      projectCreatedDate : {project.projectCreatedDate}<br/>
-                      projectStartDate : {project.projectStartDate}<br/>
-                      projectExpectedEndDate : {project.projectExpectedEndDate}<br/>
-                      {project.taskDetails.map((task,id)=>
-                      <React.Fragment key={id}>
-                        <Divider/>
-                          taskName : {task.taskName}<br/>
-                          taskAssignedTo : {task.taskAssignedTo}<br/>
-                          taskCreatedDate :{task.taskCreatedDate}<br/>
-                          taskStartDate : {task.taskStartDate}<br/>
-                          taskExpectedEndDate: {task.taskExpectedEndDate}<br/>
-                        <Divider/>
-                      </React.Fragment>
-                      )}
+                        {isUpdate ? (
+                          <CreateNewApp projectData={project} />
+                        ) : (
+                          <>
+                            projectName: {project.projectName}
+                            <br />
+                            projectCreatedBy : {project.projectCreatedBy}
+                            <br />
+                            projectCreatedDate : {project.projectCreatedDate}
+                            <br />
+                            projectStartDate : {project.projectStartDate}
+                            <br />
+                            projectExpectedEndDate :{" "}
+                            {project.projectExpectedEndDate}
+                            <br />
+                            {project.taskDetails.map((task, id) => (
+                              <Accordion
+                                key={id}
+                                elevation={3}
+                                variant="outlined"
+                              >
+                                <AccordionSummary
+                                  expandIcon={<ExpandMoreIcon />}
+                                  aria-controls="panel1bh-content"
+                                  id="panel1bh-header"
+                                >
+                                  <Typography className={classes.headingTask}>
+                                    Task#{id + 1}. {task.taskName}{" "}
+                                  </Typography>
+                                  <Typography
+                                    className={classes.secondaryHeadingTask}
+                                  >
+                                    Task Status
+                                  </Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                  <Typography>
+                                    taskName : {task.taskName}
+                                    <br />
+                                    taskDetails: {task.taskDetails}
+                                    <br />
+                                    taskAssignedTo : {task.taskAssignedTo}
+                                    <br />
+                                    taskCreatedDate :{task.taskCreatedDate}
+                                    <br />
+                                    taskStartDate : {task.taskStartDate}
+                                    <br />
+                                    taskExpectedEndDate:{" "}
+                                    {task.taskExpectedEndDate}
+                                    <br />
+                                  </Typography>
+                                </AccordionDetails>
+                              </Accordion>
+                            ))}
+                          </>
+                        )}
                       </Box>
                     </Box>
                     <Box
@@ -256,35 +330,50 @@ function AppView() {
                         History
                       </Typography>
                       <Timeline align="left" className={classes.historyDetails}>
-                        {project.history.map((item,hId)=>
+                        {project.history.map((item, hId) => (
                           <TimelineItem key={hId}>
-                          <TimelineOppositeContent>
-                            <Typography color="textSecondary">
-                              {changeDateFormat(item.updatedOn)}
-                            </Typography>
-                          </TimelineOppositeContent>
-                          <TimelineSeparator>
-                            <TimelineDot />
-                            <TimelineConnector />
-                          </TimelineSeparator>
-                          <TimelineContent>
-                            <Typography dangerouslySetInnerHTML={{ __html: `${item.activity}` }}></Typography>
-                          </TimelineContent>
-                        </TimelineItem>
-                        )}
+                            <TimelineOppositeContent>
+                              <Typography color="textSecondary">
+                                {changeDateFormat(item.updatedOn)}
+                              </Typography>
+                            </TimelineOppositeContent>
+                            <TimelineSeparator>
+                              <TimelineDot />
+                              <TimelineConnector />
+                            </TimelineSeparator>
+                            <TimelineContent>
+                              <Typography
+                                dangerouslySetInnerHTML={{
+                                  __html: `${item.activity}`,
+                                }}
+                              ></Typography>
+                            </TimelineContent>
+                          </TimelineItem>
+                        ))}
                       </Timeline>
                     </Box>
                   </AccordionDetails>
                   <Divider />
                   <AccordionActions>
-                    <Button size="small" variant="contained" color="secondary" onClick={()=>deleteProject(project._id)}>Delete Project</Button>
-                    <Button size="small" variant="contained" color="primary">
-                      Update
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="secondary"
+                      onClick={() => deleteProject(project._id)}
+                    >
+                      Delete Project
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="primary"
+                      onClick={() => updateProject(project._id)}
+                    >
+                      {!isUpdate ? "Update Details" : "Cancel Update"}
                     </Button>
                   </AccordionActions>
                 </Accordion>
               ))}
-              
             </Box>
           ) : (
             "No Projects so far"
