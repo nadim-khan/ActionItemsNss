@@ -15,6 +15,7 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
+  Tooltip
 } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -110,6 +111,11 @@ const menuItems = [
     listPath: "/",
   },
   {
+    listIcon: <AddToQueueOutlinedIcon />,
+    listText: "Create Project",
+    listPath: "/createApp",
+  },
+  {
     listIcon: <AccountCircleOutlinedIcon />,
     listText: "Profile",
     listPath: "/profile",
@@ -119,11 +125,7 @@ const menuItems = [
     listText: "Logout",
     listPath: "/",
   },
-  {
-    listIcon: <AddToQueueOutlinedIcon />,
-    listText: "Create Project",
-    listPath: "/createApp",
-  },
+  
 ];
 const signInItems = [
   {
@@ -236,6 +238,7 @@ const MainView = () => {
         <Divider />
         <List>
           {links.map((listItem, key) => (
+            <Tooltip title={listItem.listText} placement="right" arrow>
             <ListItem
               button
               key={key}
@@ -251,6 +254,8 @@ const MainView = () => {
                 primary={listItem.listText}
               />
             </ListItem>
+            </Tooltip>
+            
           ))}
         </List>
         <Divider />

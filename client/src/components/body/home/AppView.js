@@ -305,11 +305,11 @@ function AppView() {
                                 <br />
                                 projectCreatedBy : {project.projectCreatedBy}
                                 <br />
-                                projectCreatedDate : {project.projectCreatedDate}
+                                projectCreatedDate : {changeDateFormat(project.projectCreatedDate)}
                                 <br />
-                                projectStartDate : {project.projectStartDate}
+                                projectStartDate : {changeDateFormat(project.projectStartDate)}
                                 <br />
-                                projectExpectedEndDate :{project.projectExpectedEndDate}
+                                projectExpectedEndDate :{changeDateFormat(project.projectExpectedEndDate)}
                             </Grid>
                             <Grid item xs={8}>
                             {project.taskDetails.map((task, id) => (
@@ -338,12 +338,11 @@ function AppView() {
                                     <br />
                                     taskAssignedTo : {task.taskAssignedTo}
                                     <br />
-                                    taskCreatedDate :{task.taskCreatedDate}
+                                    taskCreatedDate :{changeDateFormat(task.taskCreatedDate)}
                                     <br />
-                                    taskStartDate : {task.taskStartDate}
+                                    taskStartDate : {changeDateFormat(task.taskStartDate)}
                                     <br />
-                                    taskExpectedEndDate:{" "}
-                                    {task.taskExpectedEndDate}
+                                    taskExpectedEndDate:{changeDateFormat(task.taskExpectedEndDate)}
                                     <br />
                                   </Typography>
                                 </AccordionDetails>
