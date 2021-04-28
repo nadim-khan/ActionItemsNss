@@ -361,9 +361,6 @@ const CreateNewApp = (props) => {
                 <Divider />
                 <AccordionActions>
                   <Button size="small" variant="contained" color="secondary">Remove</Button>
-                  <Button size="small" variant="contained"color="primary">
-                    Save
-                  </Button>
                 </AccordionActions>
               </Accordion>
             </div>
