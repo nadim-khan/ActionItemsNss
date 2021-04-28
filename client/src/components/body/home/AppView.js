@@ -12,6 +12,7 @@ import {
   Box,
   Divider,
   Paper,
+  Grid,
   Avatar,
   Typography,
 } from "@material-ui/core";
@@ -22,6 +23,11 @@ import TimelineConnector from "@material-ui/lab/TimelineConnector";
 import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
+import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
+import SaveIcon from '@material-ui/icons/Save';
+import PrintIcon from '@material-ui/icons/Print';
+import ShareIcon from '@material-ui/icons/Share';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -36,13 +42,14 @@ import {
   dispatchDeleteProject,
 } from "../../../redux/actions/projectAction";
 import CreateNewApp from "./CreateNewApp";
+import SpeedDial from "@material-ui/lab/SpeedDial";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
   },
   mainView: {
-    margin: "0.5rem auto",
+    margin: "0.5rem 0 0.5rem 0.5rem",
     overflow: "auto",
     maxHeight: `calc(90vh - 1rem)`,
     "&::-webkit-scrollbar": {
@@ -140,6 +147,20 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
     background: "#1ad41a",
   },
+  taskStatus:{
+    border: "1px solid black",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "80%",
+    margin: "auto 10%",
+    fontSize: theme.typography.pxToRem(12),
+    borderRadius: "1rem",
+    fontWeight: "900",
+    color: "#fff",
+    background: "#1ad41a",
+  },
   helper: {
     borderLeft: `2px solid ${theme.palette.divider}`,
     padding: theme.spacing(1, 2),
@@ -173,7 +194,10 @@ function AppView() {
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState(notificationData);
   const [expanded, setExpanded] = useState(false);
-  const [isUpdate, setUpdate] = useState(false);
+  const [isUpdate, setUpdate] = useState({
+    value:false,
+    id:null
+  });
 
   useEffect(() => {
     setLoading(true);
@@ -211,11 +235,20 @@ function AppView() {
 
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
+    setUpdate({value:false,id:null});
   };
 
-  const updateProject = (id) => {
-    setUpdate(!isUpdate);
+  const updateProject = (event,id) =>{
+    setUpdate({...isUpdate,value:!isUpdate.value,id:id});
   };
+
+  const speedDialActions = [
+    { icon: <FileCopyIcon />, name: 'Copy' },
+    { icon: <SaveIcon />, name: 'Save' },
+    { icon: <PrintIcon />, name: 'Print' },
+    { icon: <ShareIcon />, name: 'Share' },
+    { icon: <FavoriteIcon />, name: 'Like' },
+  ];
 
   return (
     <>
@@ -257,28 +290,28 @@ function AppView() {
                     </Box>
                   </AccordionSummary>
                   <AccordionDetails className={classes.details}>
-                    <Box component="div" className={classes.column1} />
                     <Box component="div" className={classes.column2}>
                       <Typography variant="h6" align="center">
                         Task Details
                       </Typography>
 
                       <Box comonent="div" className={classes.taskDetails}>
-                        {isUpdate ? (
+                        {isUpdate.value && isUpdate.id===project._id ? (
                           <CreateNewApp projectData={project} />
                         ) : (
-                          <>
-                            projectName: {project.projectName}
-                            <br />
-                            projectCreatedBy : {project.projectCreatedBy}
-                            <br />
-                            projectCreatedDate : {project.projectCreatedDate}
-                            <br />
-                            projectStartDate : {project.projectStartDate}
-                            <br />
-                            projectExpectedEndDate :{" "}
-                            {project.projectExpectedEndDate}
-                            <br />
+                          <Grid container >
+                              <Grid item xs={4}>
+                                projectName: {project.projectName}
+                                <br />
+                                projectCreatedBy : {project.projectCreatedBy}
+                                <br />
+                                projectCreatedDate : {project.projectCreatedDate}
+                                <br />
+                                projectStartDate : {project.projectStartDate}
+                                <br />
+                                projectExpectedEndDate :{project.projectExpectedEndDate}
+                            </Grid>
+                            <Grid item xs={8}>
                             {project.taskDetails.map((task, id) => (
                               <Accordion
                                 key={id}
@@ -293,11 +326,9 @@ function AppView() {
                                   <Typography className={classes.headingTask}>
                                     Task#{id + 1}. {task.taskName}{" "}
                                   </Typography>
-                                  <Typography
-                                    className={classes.secondaryHeadingTask}
-                                  >
+                                  <Typography align="center" className={classes.taskStatus}>
                                     Task Status
-                                  </Typography>
+                                </Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
                                   <Typography>
@@ -317,8 +348,8 @@ function AppView() {
                                   </Typography>
                                 </AccordionDetails>
                               </Accordion>
-                            ))}
-                          </>
+                            ))}</Grid>
+                          </Grid>
                         )}
                       </Box>
                     </Box>
@@ -367,9 +398,11 @@ function AppView() {
                       size="small"
                       variant="contained"
                       color="primary"
-                      onClick={() => updateProject(project._id)}
+                      data-document={project._id}
+                      onClick={(e) => updateProject(e,project._id)}
+                      value={isUpdate.id === project._id ? "Cancel" :  "Update"}
                     >
-                      {!isUpdate ? "Update Details" : "Cancel Update"}
+                      {isUpdate.value && isUpdate.id === project._id ? "Cancel Update" :  "Update Details"}
                     </Button>
                   </AccordionActions>
                 </Accordion>
