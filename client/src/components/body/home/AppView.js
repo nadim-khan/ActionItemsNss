@@ -15,6 +15,7 @@ import {
   Grid,
   Avatar,
   Typography,
+  Tooltip
 } from "@material-ui/core";
 import Timeline from "@material-ui/lab/Timeline";
 import TimelineItem from "@material-ui/lab/TimelineItem";
@@ -23,11 +24,6 @@ import TimelineConnector from "@material-ui/lab/TimelineConnector";
 import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
-import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
-import SaveIcon from '@material-ui/icons/Save';
-import PrintIcon from '@material-ui/icons/Print';
-import ShareIcon from '@material-ui/icons/Share';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -242,14 +238,23 @@ function AppView() {
     setUpdate({...isUpdate,value:!isUpdate.value,id:id});
   };
 
-  const speedDialActions = [
-    { icon: <FileCopyIcon />, name: 'Copy' },
-    { icon: <SaveIcon />, name: 'Save' },
-    { icon: <PrintIcon />, name: 'Print' },
-    { icon: <ShareIcon />, name: 'Share' },
-    { icon: <FavoriteIcon />, name: 'Like' },
-  ];
+const colors = ['#00AA55', '#009FD4', '#B381B3', '#939393', '#E3BC00', '#D47500', '#DC2A2A'];
 
+function numberFromText(text) {
+  // numberFromText("AA");
+  const charCodes = text
+    .split('') // => ["A", "A"]
+    .map(char => char.charCodeAt(0)) // => [65, 65]
+    .join(''); // => "6565"
+  return parseInt(charCodes, 10);
+}
+
+const avatars = document.querySelectorAll('.multiAvatar');
+
+avatars.forEach(avatar => {
+  const text = avatar.innerText; // => "AA"
+  avatar.style.backgroundColor = colors[numberFromText(text) % colors.length]; // => "#DC2A2A"
+});
   return (
     <>
       {loading ? <Spinner /> : <></>}
@@ -272,10 +277,15 @@ function AppView() {
                   >
                     <Box component="div" className={classes.column1}>
                       <Box component="div" className={classes.heading}>
-                        <AvatarGroup max={4}>
-                          <Avatar alt={user.name} src={user.avatar} />
-                          <Avatar alt={user.name} src={user.avatar} />
-                        </AvatarGroup>
+                        
+                          <AvatarGroup max={3} extraAvatarsTooltipTitle="More">
+                            {project.assignedMembers.map((user,uid)=>
+                              <Tooltip key={uid} title={user} placement="top" arrow>
+                                <Avatar  alt={user} src={user} className="multiAvatar"/>
+                              </Tooltip>
+                            )}
+                            
+                          </AvatarGroup>
                       </Box>
                     </Box>
                     <Box component="div" className={classes.column2}>
@@ -347,7 +357,8 @@ function AppView() {
                                   </Typography>
                                 </AccordionDetails>
                               </Accordion>
-                            ))}</Grid>
+                            ))}
+                            </Grid>
                           </Grid>
                         )}
                       </Box>

@@ -26,6 +26,7 @@ const appSchema = new mongoose.Schema({
             updatedOn:{type:Date,default: Date.now()}
         }
     ],
+    assignedMembers:[],
     projectCreatedBy:{
         type: String,
         required: [true, "Please provide your name!"],

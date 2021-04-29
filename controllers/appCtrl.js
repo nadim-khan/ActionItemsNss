@@ -24,6 +24,10 @@ const appCtrl = {
                     updatedOn: new Date()
                 }
             )
+            let assignedMembers = []
+            taskDetails.forEach((task,index)=>{
+                assignedMembers.push(task.taskAssignedTo)
+            })
             
             if(!projectName|| !projectCreatedBy)
                 return res.status(400).json({msg: "Please fill in all fields."})
@@ -36,6 +40,7 @@ const appCtrl = {
                 {
                     projectName,
                     history,
+                    assignedMembers,
                     taskDetails,
                     projectCreatedBy,
                     projectCreatedDate,

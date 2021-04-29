@@ -1,24 +1,29 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import AddIcon from "@material-ui/icons/Add";
 import axios from "axios";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionActions from '@material-ui/core/AccordionActions';
+
+import { showErrMsg, showSuccessMsg } from "../../utils/notification/Notification";
+
+import AddIcon from "@material-ui/icons/Add";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
+import SendIcon from "@material-ui/icons/Send";
+
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+
 import {
   Typography,
   Box,
   Grid,
   Button,
   TextField,
-  Divider
+  Divider,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  AccordionActions
 } from "@material-ui/core";
-import SendIcon from "@material-ui/icons/Send";
+
 const useStyles = makeStyles((theme) => ({
   form: {
     marginTop: "5vh",
@@ -38,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     textTransform: "uppercase",
   },
 }));
+
 const InputField = withStyles({
   root: {
     width: "100%",
@@ -65,18 +71,20 @@ const InputField = withStyles({
 })(TextField);
 
 const CreateNewApp = (props) => {
-  console.log('Is props available : ',props)
+  console.log("Is props available : ", props);
   const classes = useStyles();
   const history = useHistory();
   const auth = useSelector((state) => state.auth);
   const { user } = auth;
-  const formattedDate = (date) =>{
+  const formattedDate = (date) => {
     const today = new Date(date);
     const dd = (today.getDate() < 10 ? "0" : "") + today.getDate();
     const mm = (today.getMonth() + 1 < 10 ? "0" : "") + (today.getMonth() + 1);
     const currDate = `${today.getUTCFullYear()}-${mm}-${dd}`;
-    return currDate
-  }
+    return currDate;
+  };
+
+  //Set initial state for Form
   let initialState = {
     projectName: "",
     projectStartDate: formattedDate(new Date()),
@@ -93,14 +101,14 @@ const CreateNewApp = (props) => {
         taskExpectedEndDate: formattedDate(new Date()),
       },
     ],
-    history:[],
+    history: [],
   };
   const notificationData = {
     type: "",
     msg: "",
   };
-  if(props.projectData) {
-    initialState = props.projectData
+  if (props.projectData) {
+    initialState = props.projectData;
   }
   const [projectData, setProjectData] = useState(initialState);
   const [currentTask, setcurrentTask] = useState(initialState.taskDetails);
@@ -118,11 +126,11 @@ const CreateNewApp = (props) => {
     projectCreatedDate,
   } = projectData;
 
+  //Main form input change
   const changeHandler = async (e) => {
-
     const { name, value } = e.target;
     setSaveStatus(false);
-    setProjectData({ ...projectData, [name]: value});
+    setProjectData({ ...projectData, [name]: value });
     setNotification({
       ...notification,
       type: "",
@@ -133,6 +141,7 @@ const CreateNewApp = (props) => {
     }
   };
 
+  //Check for changes in each input element in task entry
   const handleTaskInputChange = (idx) => (evt) => {
     const newTask = currentTask.map((task, index) => {
       if (idx !== index) return task;
@@ -150,6 +159,7 @@ const CreateNewApp = (props) => {
     }
   };
 
+  // Add to current task
   const addCurrentTask = () => {
     setSubmitButton(true);
     setButton(true);
@@ -166,37 +176,61 @@ const CreateNewApp = (props) => {
     ]);
   };
 
+  //Remove Current Task
+  const removeCurrentTask = (idx) => {
+    let newTasks = currentTask.filter((task, id) => id !== idx);
+    if (newTasks.length) {
+      setcurrentTask(newTasks);
+    }
+  };
+
+  // Save and Submit app
   const createAppSubmit = async (e) => {
     e.preventDefault();
-    window.scrollTo(0, 0)
+    window.scrollTo(0, 0);
     setNotification({
       ...notification,
       type: "",
       msg: "",
     });
     try {
-        
-        if(!saved) {
-            setProjectData({
-                ...projectData,
-                projectCreatedBy: user.name,
-                taskDetails: currentTask,
-            });
-            setNotification({...notification,type:'success',msg:'Data Saved Successfully '})
-            setSaveStatus(true);
-        } else {
-            const response= await axios.post('/app/register',projectData);
-            setNotification({...notification,type:'success',msg:response.data.msg});
-            history.push('/');
-        }
+      if (!saved) {
+        setProjectData({
+          ...projectData,
+          projectCreatedBy: user.name,
+          taskDetails: currentTask,
+        });
+        setNotification({
+          ...notification,
+          type: "success",
+          msg: "Data Saved Successfully ",
+        });
+        setSaveStatus(true);
+      } else {
+        const response = await axios.post("/app/register", projectData);
+        setNotification({
+          ...notification,
+          type: "success",
+          msg: response.data.msg,
+        });
+        history.push("/");
+      }
     } catch (err) {
-      err.response.data.msg && setProjectData({...projectData, err:err.response.data.msg, success:''});
-      setNotification({ ...notification,type:'error', msg:err.response.data.msg})
+      err.response.data.msg &&
+        setProjectData({
+          ...projectData,
+          err: err.response.data.msg,
+          success: "",
+        });
+      setNotification({
+        ...notification,
+        type: "error",
+        msg: err.response.data.msg,
+      });
     }
   };
 
-
-
+  //Accordion expand handle, expand one at a time
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
@@ -204,7 +238,6 @@ const CreateNewApp = (props) => {
   return (
     <Box component="div" style={{ maxHeight: "90vh" }}>
       <Grid container justify="center">
-        
         {/* {(notification.type !== '') ? <div><Notification type={notification.type} msg={notification.msg} /><br/></div> : <></>} */}
         <Box
           component="form"
@@ -214,10 +247,12 @@ const CreateNewApp = (props) => {
           autoComplete="off"
         >
           <Typography className={classes.heading} variant="h5">
-            {props.projectData ? 'Update Project Details' : 'Create New Project'}
+            {props.projectData
+              ? "Update Project Details"
+              : "Create New Project"}
           </Typography>
-          {notification.type==="error" && showErrMsg(notification.msg)}
-        {notification.type==="success" && showSuccessMsg(notification.msg)}
+          {notification.type === "error" && showErrMsg(notification.msg)}
+          {notification.type === "success" && showSuccessMsg(notification.msg)}
           <InputField
             label="Project Name"
             fullWidth={true}
@@ -241,7 +276,6 @@ const CreateNewApp = (props) => {
             defaultValue={formattedDate(projectStartDate)}
             InputProps={{ style: { color: "#0747a6" } }}
             onChange={changeHandler}
-            
           />
           <InputField
             fullWidth={true}
@@ -280,7 +314,10 @@ const CreateNewApp = (props) => {
 
           {currentTask.map((task, idx) => (
             <div className={classes.root} key={idx}>
-              <Accordion expanded={expanded === `panel${idx+1}`} onChange={handleExpand(`panel${idx+1}`)}>
+              <Accordion
+                expanded={expanded === `panel${idx + 1}`}
+                onChange={handleExpand(`panel${idx + 1}`)}
+              >
                 <AccordionSummary
                   expandIcon={<ExpandMoreIcon />}
                   aria-controls="panel1a-content"
@@ -360,7 +397,15 @@ const CreateNewApp = (props) => {
                 </AccordionDetails>
                 <Divider />
                 <AccordionActions>
-                  <Button size="small" variant="contained" color="secondary">Remove</Button>
+                  <Button
+                    size="small"
+                    disabled={currentTask.length === 1}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => removeCurrentTask(idx)}
+                  >
+                    Remove
+                  </Button>
                 </AccordionActions>
               </Accordion>
             </div>
@@ -370,7 +415,7 @@ const CreateNewApp = (props) => {
             color="primary"
             align="center"
             variant="contained"
-            style={{marginTop:'1rem'}}
+            style={{ marginTop: "1rem" }}
             type="button"
             onClick={() => addCurrentTask()}
             className="small"
@@ -387,7 +432,7 @@ const CreateNewApp = (props) => {
             fullWidth={true}
             endIcon={<SendIcon />}
           >
-            {saved ? 'Create App' : 'Save Current Data'}
+            {saved ? "Create App" : "Save Current Data"}
           </Button>
         </Box>
       </Grid>
