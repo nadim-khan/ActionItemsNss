@@ -15,7 +15,7 @@ import {
   Grid,
   Avatar,
   Typography,
-  Tooltip
+  Tooltip,
 } from "@material-ui/core";
 import Timeline from "@material-ui/lab/Timeline";
 import TimelineItem from "@material-ui/lab/TimelineItem";
@@ -39,15 +39,25 @@ import {
 } from "../../../redux/actions/projectAction";
 import CreateNewApp from "./CreateNewApp";
 import SpeedDial from "@material-ui/lab/SpeedDial";
+import Filter from "../../utils/Filter/Filter";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
   },
   mainView: {
-    margin: "0.5rem 0 0.5rem 0.5rem",
+    height: "auto",
+    maxHeight: "90vh",
+  },
+  filterBox: {
+    maxHeight: "10vh",
+    height: "auto",
+  },
+  appListItems: {
+    maxHeight: "80vh",
+    margin: " 0.5rem 0.2rem",
+    height: "auto",
     overflow: "auto",
-    maxHeight: `calc(90vh - 1rem)`,
     "&::-webkit-scrollbar": {
       width: "0.5em",
     },
@@ -62,6 +72,40 @@ const useStyles = makeStyles((theme) => ({
       borderRadius: "5em",
     },
   },
+  paper: {
+    [theme.breakpoints.down('sm')]: {
+      maxHeight:'20vh',
+      height:'auto',
+      overflow:'auto'
+    },
+    [theme.breakpoints.up('md')]: {
+      maxHeight:'30vh',
+      height:'auto',
+      overflow:'auto'
+    },
+    [theme.breakpoints.up('lg')]: {
+      maxHeight:'60vh',
+      height:'auto',
+      overflow:'auto'
+    },
+    "&::-webkit-scrollbar": {
+      width: "0.5em",
+    },
+    "&::-webkit-scrollbar-track": {
+      boxShadow: "inset 0 0 6px rgb(153, 211, 238)",
+      webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "#77afe7",
+      outline: "1px solid #2a8ef1",
+      border: "2px solid #2a8ef1",
+      borderRadius: "5em",
+    },
+  },
+  control: {
+    padding: theme.spacing(1),
+  },
+  ////////////////////////////
   heading: {
     fontSize: theme.typography.pxToRem(15),
   },
@@ -85,9 +129,6 @@ const useStyles = makeStyles((theme) => ({
     width: 20,
   },
   taskDetails: {
-    maxHeight: "55vh",
-    paddingRight:"1rem",
-    overflow: "auto",
     "&::-webkit-scrollbar": {
       width: "0.5em",
     },
@@ -103,7 +144,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   historyDetails: {
-    maxHeight: "55vh",
     overflow: "auto",
     "&::-webkit-scrollbar": {
       width: "0.5em",
@@ -143,7 +183,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
     background: "#1ad41a",
   },
-  taskStatus:{
+  taskStatus: {
     border: "1px solid black",
     display: "flex",
     flexDirection: "row",
@@ -181,18 +221,19 @@ const notificationData = {
 };
 
 function AppView() {
+  const [loading, setLoading] = useState(true);
   const classes = useStyles();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
   const token = useSelector((state) => state.token);
   const projects = useSelector((state) => state.projects);
   const { user, isLogged } = auth;
-  const [loading, setLoading] = useState(true);
+
   const [notification, setNotification] = useState(notificationData);
   const [expanded, setExpanded] = useState(false);
   const [isUpdate, setUpdate] = useState({
-    value:false,
-    id:null
+    value: false,
+    id: null,
   });
 
   useEffect(() => {
@@ -231,199 +272,217 @@ function AppView() {
 
   const handleExpand = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
-    setUpdate({value:false,id:null});
+    setUpdate({ value: false, id: null });
   };
 
-  const updateProject = (event,id) =>{
-    setUpdate({...isUpdate,value:!isUpdate.value,id:id});
+  const updateProject = (event, id) => {
+    setUpdate({ ...isUpdate, value: !isUpdate.value, id: id });
   };
 
-const colors = ['#00AA55', '#009FD4', '#B381B3', '#939393', '#E3BC00', '#D47500', '#DC2A2A'];
+  const colors = [
+    "#00AA55",
+    "#009FD4",
+    "#B381B3",
+    "#939393",
+    "#E3BC00",
+    "#D47500",
+    "#DC2A2A",
+  ];
 
-function numberFromText(text) {
-  // numberFromText("AA");
-  const charCodes = text
-    .split('') // => ["A", "A"]
-    .map(char => char.charCodeAt(0)) // => [65, 65]
-    .join(''); // => "6565"
-  return parseInt(charCodes, 10);
-}
+  function numberFromText(text) {
+    // numberFromText("AA");
+    const charCodes = text
+      .split("") // => ["A", "A"]
+      .map((char) => char.charCodeAt(0)) // => [65, 65]
+      .join(""); // => "6565"
+    return parseInt(charCodes, 10);
+  }
 
-const avatars = document.querySelectorAll('.multiAvatar');
+  const avatars = document.querySelectorAll(".multiAvatar");
 
-avatars.forEach(avatar => {
-  const text = avatar.innerText; // => "AA"
-  avatar.style.backgroundColor = colors[numberFromText(text) % colors.length]; // => "#DC2A2A"
-});
+  avatars.forEach((avatar) => {
+    const text = avatar.innerText; // => "AA"
+    avatar.style.backgroundColor = colors[numberFromText(text) % colors.length]; // => "#DC2A2A"
+  });
   return (
     <>
-      {loading ? <Spinner /> : <></>}
       {notification.type === "error" && showErrMsg(notification.msg)}
       {notification.type === "success" && showSuccessMsg(notification.msg)}
-      {isLogged ? (
+      {loading ? (
+        <Spinner />
+      ) : (
         <>
-          {projects.length ? (
+          {isLogged ? (
             <Box component="div" className={classes.mainView}>
-              {projects.map((project, index) => (
-                <Accordion
-                  key={index}
-                  expanded={expanded === `panel${index + 1}`}
-                  onChange={handleExpand(`panel${index + 1}`)}
-                >
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1c-content"
-                    id="panel1c-header"
+              <Box component="div" className={classes.filterBox}>
+                <Filter />
+              </Box>
+              <Box component="div" className={classes.appListItems}>
+                {projects.map((project, index) => (
+                  <Accordion
+                    key={index}
+                    expanded={expanded === `panel${index + 1}`}
+                    onChange={handleExpand(`panel${index + 1}`)}
                   >
-                    <Box component="div" className={classes.column1}>
-                      <Box component="div" className={classes.heading}>
-                        
-                          <AvatarGroup max={3} extraAvatarsTooltipTitle="More">
-                            {project.assignedMembers.map((user,uid)=>
-                              <Tooltip key={uid} title={user} placement="top" arrow>
-                                <Avatar  alt={user} src={user} className="multiAvatar"/>
-                              </Tooltip>
-                            )}
-                            
-                          </AvatarGroup>
-                      </Box>
-                    </Box>
-                    <Box component="div" className={classes.column2}>
-                      <Typography className={classes.secondaryHeading}>
-                        {project.projectName}
-                      </Typography>
-                    </Box>
-                    <Box component="div" className={classes.column3}>
-                      <Typography align="center" className={classes.status}>
-                        Status
-                      </Typography>
-                    </Box>
-                  </AccordionSummary>
-                  <AccordionDetails className={classes.details}>
-                    <Box component="div" className={classes.column2}>
-                      <Typography variant="h6" align="center">
-                        Task Details
-                      </Typography>
-
-                      <Box comonent="div" className={classes.taskDetails}>
-                        {isUpdate.value && isUpdate.id===project._id ? (
-                          <CreateNewApp projectData={project} />
-                        ) : (
-                          <Grid container >
-                              <Grid item xs={4}>
-                                projectName: {project.projectName}
-                                <br />
-                                projectCreatedBy : {project.projectCreatedBy}
-                                <br />
-                                projectCreatedDate : {changeDateFormat(project.projectCreatedDate)}
-                                <br />
-                                projectStartDate : {changeDateFormat(project.projectStartDate)}
-                                <br />
-                                projectExpectedEndDate :{changeDateFormat(project.projectExpectedEndDate)}
-                            </Grid>
-                            <Grid item xs={8}>
-                            {project.taskDetails.map((task, id) => (
-                              <Accordion
-                                key={id}
-                                elevation={3}
-                                variant="outlined"
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1c-content"
+                      id="panel1c-header"
+                    >
+                      <Box component="div" className={classes.column1}>
+                        <Box component="div" className={classes.heading}>
+                          <AvatarGroup max={2}>
+                            {project.assignedMembers.map((user, uid) => (
+                              <Tooltip
+                                key={uid}
+                                title={user}
+                                placement="top"
+                                arrow
                               >
-                                <AccordionSummary
-                                  expandIcon={<ExpandMoreIcon />}
-                                  aria-controls="panel1bh-content"
-                                  id="panel1bh-header"
-                                >
-                                  <Typography className={classes.headingTask}>
-                                    Task#{id + 1}. {task.taskName}{" "}
-                                  </Typography>
-                                  <Typography align="center" className={classes.taskStatus}>
-                                    Task Status
-                                </Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                  <Typography>
-                                    taskName : {task.taskName}
-                                    <br />
-                                    taskDetails: {task.taskDetails}
-                                    <br />
-                                    taskAssignedTo : {task.taskAssignedTo}
-                                    <br />
-                                    taskCreatedDate :{changeDateFormat(task.taskCreatedDate)}
-                                    <br />
-                                    taskStartDate : {changeDateFormat(task.taskStartDate)}
-                                    <br />
-                                    taskExpectedEndDate:{changeDateFormat(task.taskExpectedEndDate)}
-                                    <br />
-                                  </Typography>
-                                </AccordionDetails>
-                              </Accordion>
+                                <Avatar
+                                  alt={user}
+                                  src={user}
+                                  className="multiAvatar"
+                                />
+                              </Tooltip>
                             ))}
-                            </Grid>
-                          </Grid>
-                        )}
+                          </AvatarGroup>
+                        </Box>
                       </Box>
-                    </Box>
-                    <Box
-                      component="div"
-                      className={clsx(classes.column3, classes.helper)}
-                    >
-                      <Typography variant="h6" align="center">
-                        History
-                      </Typography>
-                      <Timeline align="left" className={classes.historyDetails}>
-                        {project.history.map((item, hId) => (
-                          <TimelineItem key={hId}>
-                            <TimelineOppositeContent>
-                              <Typography color="textSecondary">
-                                {changeDateFormat(item.updatedOn)}
-                              </Typography>
-                            </TimelineOppositeContent>
-                            <TimelineSeparator>
-                              <TimelineDot />
-                              <TimelineConnector />
-                            </TimelineSeparator>
-                            <TimelineContent>
-                              <Typography
-                                dangerouslySetInnerHTML={{
-                                  __html: `${item.activity}`,
-                                }}
-                              ></Typography>
-                            </TimelineContent>
-                          </TimelineItem>
-                        ))}
-                      </Timeline>
-                    </Box>
-                  </AccordionDetails>
-                  <Divider />
-                  <AccordionActions>
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => deleteProject(project._id)}
-                    >
-                      Delete Project
-                    </Button>
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="primary"
-                      data-document={project._id}
-                      onClick={(e) => updateProject(e,project._id)}
-                      value={isUpdate.id === project._id ? "Cancel" :  "Update"}
-                    >
-                      {isUpdate.value && isUpdate.id === project._id ? "Cancel Update" :  "Update Details"}
-                    </Button>
-                  </AccordionActions>
-                </Accordion>
-              ))}
+                      <Box component="div" className={classes.column2}>
+                        <Typography className={classes.secondaryHeading}>
+                          {project.projectName}
+                        </Typography>
+                      </Box>
+                      <Box component="div" className={classes.column3}>
+                        <Typography align="center" className={classes.status}>
+                          Status
+                        </Typography>
+                      </Box>
+                    </AccordionSummary>
+                    <AccordionDetails className={classes.details}>
+                      <Grid container className={classes.root} spacing={1}>
+                        <Grid item xs={12}>
+                          <Grid container justify="center" spacing={1}>
+                              <Grid item xs={12} sm={12} md={3} lg={3}>
+                                <Box component="div" className={classes.paper} >
+                                    projectName: {project.projectName}
+                                    <br />
+                                    projectCreatedBy : {project.projectCreatedBy}
+                                    <br />
+                                    projectCreatedDate : {changeDateFormat(project.projectCreatedDate)}
+                                    <br />
+                                    projectStartDate : {changeDateFormat(project.projectStartDate)}
+                                    <br />
+                                    projectExpectedEndDate :{changeDateFormat(project.projectExpectedEndDate)}
+                                </Box>
+                              </Grid>
+                              <Grid  item xs={12} sm={12} md={9} lg={6}> 
+                                <Box component="div" className={classes.paper} >
+                                  {project.taskDetails.map((task, id) => (
+                                    <Accordion
+                                      key={id}
+                                      elevation={3}
+                                      variant="outlined"
+                                    >
+                                      <AccordionSummary
+                                        expandIcon={<ExpandMoreIcon />}
+                                        aria-controls="panel1bh-content"
+                                        id="panel1bh-header"
+                                      >
+                                        <Typography className={classes.headingTask}>
+                                          Task#{id + 1}. {task.taskName}{" "}
+                                        </Typography>
+                                        <Typography align="center" className={classes.taskStatus}>
+                                          Task Status
+                                      </Typography>
+                                      </AccordionSummary>
+                                      <AccordionDetails>
+                                        <Typography>
+                                          taskName : {task.taskName}
+                                          <br />
+                                          taskDetails: {task.taskDetails}
+                                          <br />
+                                          taskAssignedTo : {task.taskAssignedTo}
+                                          <br />
+                                          taskCreatedDate :{changeDateFormat(task.taskCreatedDate)}
+                                          <br />
+                                          taskStartDate : {changeDateFormat(task.taskStartDate)}
+                                          <br />
+                                          taskExpectedEndDate:{changeDateFormat(task.taskExpectedEndDate)}
+                                          <br />
+                                        </Typography>
+                                      </AccordionDetails>
+                                    </Accordion>
+                                  ))}
+                                </Box>
+                              </Grid>
+                              <Grid  item xs={12} sm={12} md={12} lg={3}>
+                                <Box component="div" className={classes.paper} >
+                                <Typography variant="h6" align="center">
+                                    History
+                                  </Typography>
+                                  <Timeline align="left" className={classes.historyDetails}>
+                                    {project.history.map((item, hId) => (
+                                      <TimelineItem key={hId}>
+                                        <TimelineOppositeContent>
+                                          <Typography color="textSecondary">
+                                            {changeDateFormat(item.updatedOn)}
+                                          </Typography>
+                                        </TimelineOppositeContent>
+                                        <TimelineSeparator>
+                                          <TimelineDot />
+                                          <TimelineConnector />
+                                        </TimelineSeparator>
+                                        <TimelineContent>
+                                          <Typography
+                                            dangerouslySetInnerHTML={{
+                                              __html: `${item.activity}`,
+                                            }}
+                                          ></Typography>
+                                        </TimelineContent>
+                                      </TimelineItem>
+                                    ))}
+                                  </Timeline>
+                                </Box>
+                              </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
+                    </AccordionDetails>
+                    <Divider />
+                    <AccordionActions>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => deleteProject(project._id)}
+                      >
+                        Delete Project
+                      </Button>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="primary"
+                        data-document={project._id}
+                        onClick={(e) => updateProject(e, project._id)}
+                        value={
+                          isUpdate.id === project._id ? "Cancel" : "Update"
+                        }
+                      >
+                        {isUpdate.value && isUpdate.id === project._id
+                          ? "Cancel Update"
+                          : "Update Details"}
+                      </Button>
+                    </AccordionActions>
+                  </Accordion>
+                ))}
+              </Box>
             </Box>
           ) : (
-            "No Projects so far"
+            "Loading..."
           )}
         </>
-      ) : (
-        <Info />
       )}
     </>
   );
