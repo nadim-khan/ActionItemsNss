@@ -3,15 +3,9 @@ import axios from "axios";
 import { isEmail } from "../../utils/validation/Validation";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { Typography, Box, Grid, Button, TextField } from "@material-ui/core";
-import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
+import { showErrMsg, showSuccessMsg } from '../../utils/notification/Notification'
 import SendIcon from "@material-ui/icons/Send";
 const useStyles = makeStyles((theme) => ({
-  form: {
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    position: "absolute",
-  },
   button: {
     marginTop: "1rem",
     color: "#fff",
@@ -56,11 +50,11 @@ const initialState = {
   email: "",
 };
 const initialNotification = {
-    type:'',
-    msg:''
+  type: '',
+  msg: ''
 }
 
-const  ForgotPassword=() =>{
+const ForgotPassword = () => {
   const classes = useStyles();
   const [data, setData] = useState(initialState);
   const [notification, setNotification] = useState(initialNotification)
@@ -74,26 +68,26 @@ const  ForgotPassword=() =>{
 
   const forgotPassword = async () => {
     if (!isEmail(email)) {
-        setNotification({...notification,type:'error',msg:'Invalid emails.'});
-        setData({ ...data });
-        return
+      setNotification({ ...notification, type: 'error', msg: 'Invalid emails.' });
+      setData({ ...data });
+      return
     }
     try {
       const res = await axios.post("/user/forgot", { email });
-      if(res) {
-        setData({ ...data});
-        setNotification({...notification,type:'success',msg:res.data.msg});
-        return 
+      if (res) {
+        setData({ ...data });
+        setNotification({ ...notification, type: 'success', msg: res.data.msg });
+        return
       }
     } catch (err) {
-        setNotification({...notification,type:'error',msg:err.response.data.msg});
+      setNotification({ ...notification, type: 'error', msg: err.response.data.msg });
       err.response.data.msg &&
-        setData({ ...data});
+        setData({ ...data });
     }
   };
 
   return (
-    <Box component="div" style={{  height: "90vh" }}>
+    <Box component="div" style={{ height: "90vh" }}>
       <Grid container justify="center">
         {/* {notification.type !== "" ? (
           <div>
@@ -103,40 +97,42 @@ const  ForgotPassword=() =>{
         ) : (
           <></>
         )} */}
-        <Box
-          component="form"
-          onSubmit={forgotPassword}
-          className={classes.form}
-        >
-          <Typography className={classes.heading} variant="h5">
-            Forgot Password
-          </Typography>
-          {notification.type ==='error' && showErrMsg(notification.msg)}
-                    {notification.type ==='success' && showSuccessMsg(notification.msg)}
-          <InputField
-            fullWidth={true}
-            label="Email"
-            name="email"
-            type="email"
-            InputProps={{ style: { color: "#0747a6" } }}
-            variant="outlined"
-            margin="dense"
-            size="medium"
-            value={email}
-            onChange={changeHandler}
-          />
-          <br />
-          <Button
-            disabled={!email}
-            className={classes.button}
-            variant="outlined"
-            type="submit"
-            fullWidth={true}
-            endIcon={<SendIcon />}
+        <Grid item xs={9}>
+          <Box
+            component="form"
+            onSubmit={forgotPassword}
+            className={classes.form}
           >
-            Send
+            <Typography className={classes.heading} variant="h5">
+              Forgot Password
+          </Typography>
+            {notification.type === 'error' && showErrMsg(notification.msg)}
+            {notification.type === 'success' && showSuccessMsg(notification.msg)}
+            <InputField
+              fullWidth={true}
+              label="Email"
+              name="email"
+              type="email"
+              InputProps={{ style: { color: "#0747a6" } }}
+              variant="outlined"
+              margin="dense"
+              size="medium"
+              value={email}
+              onChange={changeHandler}
+            />
+            <br />
+            <Button
+              disabled={!email}
+              className={classes.button}
+              variant="outlined"
+              type="submit"
+              fullWidth={true}
+              endIcon={<SendIcon />}
+            >
+              Send
           </Button>
-        </Box>
+          </Box>
+        </Grid>
       </Grid>
     </Box>
   );

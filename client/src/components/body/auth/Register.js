@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Link} from 'react-router-dom'
+import {Link,useHistory} from 'react-router-dom'
 import {makeStyles,withStyles} from '@material-ui/core/styles';
 import axios from 'axios';
 import {
@@ -13,12 +13,6 @@ import SendIcon from '@material-ui/icons/Send';
 import {showErrMsg, showSuccessMsg} from '../../utils/notification/Notification'
 import {isEmpty, isEmail, isLength, isMatch} from '../../utils/validation/Validation'
 const useStyles=makeStyles(theme=>({
-    form:{
-        top:'50%',
-        left:'50%',
-        transform:'translate(-50%, -50%)',
-        position:'absolute'
-    },
     button:{
         marginTop:'1rem',
         color:'#fff',
@@ -72,7 +66,7 @@ const notificationData = {
 
 const Register = () => {
     const classes = useStyles();
-    
+    const history = useHistory();
     const [user, setUser] = useState(initialState);
     const [notification, setNotification] = useState(notificationData);
 
@@ -127,6 +121,10 @@ const Register = () => {
                     type:'success',
                     msg:response.data.msg
                 })
+                setTimeout(()=>{
+                    if(response.data.msg)
+                       history.push('/')
+                },2000)
             }
         } catch(err) {
             err.response.data.msg && setUser({...user});
@@ -142,6 +140,7 @@ const Register = () => {
     return (
         <Box component="div" style={{height:'90vh'}}>
             <Grid container justify="center">
+            <Grid item xs={9}>
             {/* {(notification.type !== '') ? <div><Notification type={notification.type} msg={notification.msg} /><br/></div> : <></>} */}
                 <Box component="form" onSubmit={registerAuth} className={classes.form}>
                     <Typography className={classes.heading} variant="h5">
@@ -206,6 +205,7 @@ const Register = () => {
                             <Link  to="/login" style={{textDecoration:'none',color:'#0747a6',marginLeft:'0.5rem',fontWeight:'700'}}>Login</Link>
                     </Typography>
                 </Box>
+                </Grid>
             </Grid>
         </Box>
     )

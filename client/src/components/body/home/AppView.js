@@ -54,7 +54,7 @@ const useStyles = makeStyles((theme) => ({
     height: "auto",
   },
   appListItems: {
-    maxHeight: "80vh",
+    maxHeight: "75vh",
     margin: " 0.5rem 0.2rem",
     height: "auto",
     overflow: "auto",
@@ -74,19 +74,19 @@ const useStyles = makeStyles((theme) => ({
   },
   paper: {
     [theme.breakpoints.down('sm')]: {
-      maxHeight:'20vh',
-      height:'auto',
-      overflow:'auto'
+      maxHeight: '20vh',
+      height: 'auto',
+      overflow: 'auto'
     },
     [theme.breakpoints.up('md')]: {
-      maxHeight:'30vh',
-      height:'auto',
-      overflow:'auto'
+      maxHeight: '30vh',
+      height: 'auto',
+      overflow: 'auto'
     },
     [theme.breakpoints.up('lg')]: {
-      maxHeight:'60vh',
-      height:'auto',
-      overflow:'auto'
+      maxHeight: '60vh',
+      height: 'auto',
+      overflow: 'auto'
     },
     "&::-webkit-scrollbar": {
       width: "0.5em",
@@ -104,6 +104,23 @@ const useStyles = makeStyles((theme) => ({
   },
   control: {
     padding: theme.spacing(1),
+  },
+  updateView:{
+    maxHeight:'60vh',
+    overflow: 'auto',
+  "&::-webkit-scrollbar": {
+    width: "0.5em",
+  },
+  "&::-webkit-scrollbar-track": {
+    boxShadow: "inset 0 0 6px rgb(153, 211, 238)",
+    webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    backgroundColor: "#77afe7",
+    outline: "1px solid #2a8ef1",
+    border: "2px solid #2a8ef1",
+    borderRadius: "5em",
+  },
   },
   ////////////////////////////
   heading: {
@@ -246,6 +263,7 @@ function AppView() {
   }, [token, dispatch, isLogged]);
 
   const getAllProjects = () => {
+    setLoading(true);
     fetchAllProject(token).then((res) => {
       setLoading(false);
       dispatch(dispatchAllProject(res));
@@ -262,7 +280,7 @@ function AppView() {
           type: "success",
           msg: "Project Deleted Successfully !",
         });
-        dispatch(dispatchDeleteProject(res));
+        //dispatch(dispatchDeleteProject(res));
         getAllProjects();
       });
     } else {
@@ -361,23 +379,27 @@ function AppView() {
                       </Box>
                     </AccordionSummary>
                     <AccordionDetails className={classes.details}>
-                      <Grid container className={classes.root} spacing={1}>
-                        <Grid item xs={12}>
-                          <Grid container justify="center" spacing={1}>
+                        <Grid container className={classes.root} spacing={1}>
+                           { isUpdate.value && isUpdate.id === project._id ? 
+                           <Grid item xs={12} className={classes.updateView}>
+                             <CreateNewApp projectData={project} />
+                           </Grid> :
+                          <Grid item xs={12}>
+                            <Grid container justify="center" spacing={1}>
                               <Grid item xs={12} sm={12} md={3} lg={3}>
                                 <Box component="div" className={classes.paper} >
-                                    projectName: {project.projectName}
-                                    <br />
+                                  projectName: {project.projectName}
+                                  <br />
                                     projectCreatedBy : {project.projectCreatedBy}
-                                    <br />
+                                  <br />
                                     projectCreatedDate : {changeDateFormat(project.projectCreatedDate)}
-                                    <br />
+                                  <br />
                                     projectStartDate : {changeDateFormat(project.projectStartDate)}
-                                    <br />
+                                  <br />
                                     projectExpectedEndDate :{changeDateFormat(project.projectExpectedEndDate)}
                                 </Box>
                               </Grid>
-                              <Grid  item xs={12} sm={12} md={9} lg={6}> 
+                              <Grid item xs={12} sm={12} md={9} lg={6}>
                                 <Box component="div" className={classes.paper} >
                                   {project.taskDetails.map((task, id) => (
                                     <Accordion
@@ -417,9 +439,9 @@ function AppView() {
                                   ))}
                                 </Box>
                               </Grid>
-                              <Grid  item xs={12} sm={12} md={12} lg={3}>
+                              <Grid item xs={12} sm={12} md={12} lg={3}>
                                 <Box component="div" className={classes.paper} >
-                                <Typography variant="h6" align="center">
+                                  <Typography variant="h6" align="center">
                                     History
                                   </Typography>
                                   <Timeline align="left" className={classes.historyDetails}>
@@ -446,9 +468,10 @@ function AppView() {
                                   </Timeline>
                                 </Box>
                               </Grid>
+                            </Grid>
                           </Grid>
+                      }
                         </Grid>
-                      </Grid>
                     </AccordionDetails>
                     <Divider />
                     <AccordionActions>

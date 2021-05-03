@@ -26,7 +26,6 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   form: {
-    marginTop: "5vh",
   },
   button: {
     marginTop: "1rem",
@@ -161,6 +160,7 @@ const CreateNewApp = (props) => {
 
   // Add to current task
   const addCurrentTask = () => {
+    setSaveStatus(false);
     setSubmitButton(true);
     setButton(true);
     setcurrentTask((oldTask) => [
@@ -213,7 +213,10 @@ const CreateNewApp = (props) => {
           type: "success",
           msg: response.data.msg,
         });
-        history.push("/");
+        setTimeout(()=>{
+          if(response.data.msg)
+             history.push('/projects')
+      },2000)
       }
     } catch (err) {
       err.response.data.msg &&
@@ -236,7 +239,7 @@ const CreateNewApp = (props) => {
   };
 
   return (
-    <Box component="div" style={{ maxHeight: "90vh" }}>
+    <Box component="div" style={{ height: "90vh" }}>
       <Grid container justify="center">
         {/* {(notification.type !== '') ? <div><Notification type={notification.type} msg={notification.msg} /><br/></div> : <></>} */}
         <Box

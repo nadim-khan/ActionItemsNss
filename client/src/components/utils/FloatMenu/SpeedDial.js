@@ -430,3 +430,209 @@ avatars.forEach(avatar => {
 }
 
 export default AppView;
+
+
+
+<Box component="div" className={classes.updateView}>
+      <Grid container justify="center" >
+        <Grid item xs={9} >
+        {/* {(notification.type !== '') ? <div><Notification type={notification.type} msg={notification.msg} /><br/></div> : <></>} */}
+        <Box
+          component="form"
+          onSubmit={createAppSubmit}
+          className={classes.form}
+          noValidate
+          autoComplete="off"
+        >
+          <Typography className={classes.heading} variant="h5">
+            {props.projectData
+              ? "Update Project Details"
+              : "Create New Project"}
+          </Typography>
+          {notification.type === "error" && showErrMsg(notification.msg)}
+          {notification.type === "success" && showSuccessMsg(notification.msg)}
+          <InputField
+            label="Project Name"
+            fullWidth={true}
+            name="projectName"
+            type="text"
+            variant="outlined"
+            margin="dense"
+            size="medium"
+            defaultValue={projectName}
+            InputProps={{ style: { color: "#0747a6" } }}
+            onChange={changeHandler}
+          />
+          <InputField
+            label="Project Start Date"
+            fullWidth={true}
+            name="projectStartDate"
+            type="date"
+            variant="outlined"
+            margin="dense"
+            size="medium"
+            defaultValue={formattedDate(projectStartDate)}
+            InputProps={{ style: { color: "#0747a6" } }}
+            onChange={changeHandler}
+          />
+          <InputField
+            fullWidth={true}
+            label="Expected End Date"
+            name="projectExpectedEndDate"
+            type="date"
+            InputProps={{ style: { color: "#0747a6" } }}
+            defaultValue={formattedDate(projectExpectedEndDate)}
+            variant="outlined"
+            margin="dense"
+            size="medium"
+            onChange={changeHandler}
+          />
+          <InputField
+            fullWidth={true}
+            name="projectCreatedBy"
+            type="text"
+            InputProps={{ style: { display: "none" } }}
+            variant="outlined"
+            margin="dense"
+            size="medium"
+            defaultValue={projectCreatedBy}
+            onChange={changeHandler}
+          />
+          <InputField
+            fullWidth={true}
+            name="projectCreatedDate"
+            type="date"
+            InputProps={{ style: { display: "none" } }}
+            defaultValue={formattedDate(projectCreatedDate)}
+            variant="outlined"
+            margin="dense"
+            size="medium"
+            onChange={changeHandler}
+          />
+
+          {currentTask.map((task, idx) => (
+            <div className={classes.root} key={idx}>
+              <Accordion
+                expanded={expanded === `panel${idx + 1}`}
+                onChange={handleExpand(`panel${idx + 1}`)}
+              >
+                <AccordionSummary
+                  expandIcon={<ExpandMoreIcon />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={classes.heading}>
+                    Task #{idx + 1} {task.taskName}
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography> </Typography>
+                  <InputField
+                    label="Task Name"
+                    fullWidth={true}
+                    name="taskName"
+                    type="text"
+                    variant="outlined"
+                    margin="dense"
+                    size="medium"
+                    placeholder={`Task #${idx + 1} name`}
+                    defaultValue={task.taskName}
+                    onChange={handleTaskInputChange(idx)}
+                  />
+                  <br />
+                  <InputField
+                    label="Task Details"
+                    fullWidth={true}
+                    name="taskDetails"
+                    type="text"
+                    variant="outlined"
+                    margin="dense"
+                    size="medium"
+                    placeholder={`Task #${idx + 1} name`}
+                    defaultValue={task.taskDetails}
+                    onChange={handleTaskInputChange(idx)}
+                  />
+                  <br />
+                  <InputField
+                    label="Task Assigned to"
+                    fullWidth={true}
+                    name="taskAssignedTo"
+                    type="text"
+                    variant="outlined"
+                    margin="dense"
+                    size="medium"
+                    placeholder={`Task #${idx + 1} taskAssignedTo `}
+                    defaultValue={task.taskAssignedTo}
+                    onChange={handleTaskInputChange(idx)}
+                  />
+                  <br />
+                  <InputField
+                    label="Task Start Date"
+                    fullWidth={true}
+                    name="taskStartDate"
+                    type="date"
+                    variant="outlined"
+                    margin="dense"
+                    size="medium"
+                    placeholder={`Task #${idx + 1} name`}
+                    defaultValue={formattedDate(task.taskStartDate)}
+                    onChange={handleTaskInputChange(idx)}
+                  />
+                  <br />
+                  <InputField
+                    fullWidth={true}
+                    label="Task End Date"
+                    name="taskExpectedEndDate"
+                    type="date"
+                    variant="outlined"
+                    margin="dense"
+                    size="medium"
+                    placeholder={`Task #${idx + 1} name`}
+                    defaultValue={formattedDate(task.taskExpectedEndDate)}
+                    onChange={handleTaskInputChange(idx)}
+                  />
+                  <br />
+                </AccordionDetails>
+                <Divider />
+                <AccordionActions>
+                  <Button
+                    size="small"
+                    disabled={currentTask.length === 1}
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => removeCurrentTask(idx)}
+                  >
+                    Remove
+                  </Button>
+                </AccordionActions>
+              </Accordion>
+            </div>
+          ))}
+          <Button
+            fullWidth={true}
+            color="primary"
+            align="center"
+            variant="contained"
+            style={{ marginTop: "1rem" }}
+            type="button"
+            onClick={() => addCurrentTask()}
+            className="small"
+            disabled={disableTaskButton}
+          >
+            <AddIcon /> Add More Task
+          </Button>
+          <br />
+          <Button
+            disabled={disableSubmitButton || (!projectName && !user.name)}
+            className={classes.button}
+            variant="outlined"
+            type="submit"
+            fullWidth={true}
+            endIcon={<SendIcon />}
+          >
+            {saved ? "Create App" : "Save Current Data"}
+          </Button>
+        </Box>
+        </Grid>
+      </Grid>
+    </Box>

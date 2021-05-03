@@ -7,12 +7,6 @@ import { Typography, Box, Grid, Button, TextField } from "@material-ui/core";
 import SendIcon from "@material-ui/icons/Send";
 // import Notification from "../utilities/Notification";
 const useStyles = makeStyles((theme) => ({
-  form: {
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    position: "absolute",
-  },
   button: {
     marginTop: "1rem",
     color: "#fff",
@@ -114,6 +108,7 @@ const ResetPassword=()=> {
         ) : (
           <></>
         )} */}
+         <Grid item xs={9}>
         <Box
           component="form"
           onSubmit={handleResetPass}
@@ -161,6 +156,7 @@ const ResetPassword=()=> {
             Reset
           </Button>
         </Box>
+        </Grid>
       </Grid>
     </Box>
   );

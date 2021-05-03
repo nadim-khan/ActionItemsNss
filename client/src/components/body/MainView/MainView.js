@@ -26,6 +26,7 @@ import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
 import PowerSettingsNewTwoToneIcon from '@material-ui/icons/PowerSettingsNewTwoTone';
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import AddToQueueOutlinedIcon from '@material-ui/icons/AddToQueueOutlined';
+import LineStyleIcon from '@material-ui/icons/LineStyle';
 import {  Home } from "@material-ui/icons";
 import { useSelector } from "react-redux";
 import logo from '../../../logo.png'
@@ -109,6 +110,11 @@ const menuItems = [
     listIcon: <Home />,
     listText: "Home",
     listPath: "/",
+  },
+  {
+    listIcon: <LineStyleIcon />,
+    listText: "Projects",
+    listPath: "/projects"
   },
   {
     listIcon: <AddToQueueOutlinedIcon />,
@@ -238,10 +244,10 @@ const MainView = () => {
         <Divider />
         <List>
           {links.map((listItem, key) => (
-            <Tooltip title={listItem.listText} placement="right" arrow>
+            <Tooltip title={listItem.listText} placement="right" arrow key={key}>
             <ListItem
               button
-              key={key}
+              
               component={Link}
               to={listItem.listPath}
               onClick={listItem.listText === "Logout" ? handleLogout : null}

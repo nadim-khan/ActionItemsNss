@@ -16,12 +16,7 @@ import {
 } from "@material-ui/core";
 import SendIcon from '@material-ui/icons/Send';
 const useStyles=makeStyles(theme=>({
-    form:{
-        top:'50%',
-        left:'50%',
-        transform:'translate(-50%, -50%)',
-        position:'absolute'
-    },
+    
     button:{
         marginTop:'1rem',
         color:'#fff',
@@ -124,10 +119,13 @@ const Login = () => {
                     type:'success',
                     msg:'Successfully Logged In'
                 })
-               
+                setTimeout(()=>{
+                    
+                       history.push('/')
+                },2000)
             }
             dispatch(dispatchLogin())
-            history.push('/')
+            
         } catch (err) {
             err.response.data.msg && 
             setUser({...user, err: err.response.data.msg, success: ''})
@@ -142,6 +140,7 @@ const Login = () => {
     return (
         <Box component="div" style={{height:'90vh'}}>
             <Grid container justify="center">
+            <Grid item xs={9}>
             {/* {(notification.type !== '') ? <div><Notification type={notification.type} msg={notification.msg} /><br/></div> : <></>} */}
                 <Box component="form" onSubmit={loginAuth} className={classes.form}>
                     
@@ -206,6 +205,7 @@ const Login = () => {
                         cookiePolicy={'single_host_origin'}
                     />
                 </Box>
+                </Grid>
             </Grid>
             
         </Box>

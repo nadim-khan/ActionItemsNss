@@ -14,6 +14,8 @@ import {useSelector} from 'react-redux'
 import ForgotPassword from '../body/auth/ForgotPassword'
 import ResetPassword from '../body/auth/ResetPassword'
 import CreateNewApp from './home/CreateNewApp'
+import AppView from './home/AppView'
+import Info from './home/Info'
 
 function Body() {
     const auth = useSelector(state => state.auth)
@@ -21,10 +23,10 @@ function Body() {
     return (
         <section >
             <Switch>
-                <Route path="/" component={Home} exact />
+                <Route path="/" component={Info} exact />
 
-                <Route path="/login" component={isLogged ? Home : Login} exact />
-                <Route path="/register" component={isLogged ? Home : Register} exact />
+                <Route path="/login" component={isLogged ? Info : Login} exact />
+                <Route path="/register" component={isLogged ? Info : Register} exact />
 
                 <Route path="/forgotPassword" component={isLogged ? NotFound : ForgotPassword} exact />
                 <Route path="/user/reset/:token" component={isLogged ? NotFound : ResetPassword} exact />
@@ -35,6 +37,7 @@ function Body() {
                 <Route path="/edit_user/:id" component={isAdmin ? EditUser : NotFound} exact />
 
                 <Route path="/createApp" component={isLogged ? CreateNewApp : NotFound} exact />
+                <Route path="/projects" component={isLogged ? AppView : Login} exact />
 
             </Switch>
         </section>
