@@ -26,6 +26,7 @@ import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import { makeStyles } from "@material-ui/core/styles";
+import AddCommentIcon from '@material-ui/icons/AddComment';
 import clsx from "clsx";
 import { useSelector, useDispatch } from "react-redux";
 import Info from "./Info";
@@ -40,6 +41,7 @@ import {
 import CreateNewApp from "./CreateNewApp";
 import SpeedDial from "@material-ui/lab/SpeedDial";
 import Filter from "../../utils/Filter/Filter";
+import CommentView from "../../utils/Comments/CommentView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -252,6 +254,12 @@ function AppView() {
     value: false,
     id: null,
   });
+  const [isCommentOpen,setCommentOpen] = useState(false);
+  const [commentData,setCommentData]=useState({
+    projectData:null,
+    taskData:null,
+    openView:isCommentOpen
+  })
 
   useEffect(() => {
     setLoading(true);
@@ -307,7 +315,7 @@ function AppView() {
     "#DC2A2A",
   ];
 
-  function numberFromText(text) {
+  const numberFromText =(text)=> {
     // numberFromText("AA");
     const charCodes = text
       .split("") // => ["A", "A"]
@@ -322,10 +330,18 @@ function AppView() {
     const text = avatar.innerText; // => "AA"
     avatar.style.backgroundColor = colors[numberFromText(text) % colors.length]; // => "#DC2A2A"
   });
+
+  //COmment View 
+  const openComment = (projectDetails,taskDetails) =>{
+    setCommentOpen(true)
+    setCommentData({...commentData,projectData:projectDetails,
+      taskData:taskDetails,openView:true})
+  }
   return (
     <>
       {notification.type === "error" && showErrMsg(notification.msg)}
       {notification.type === "success" && showSuccessMsg(notification.msg)}
+      {isCommentOpen ? <CommentView data={commentData}/>:<></> }
       {loading ? (
         <Spinner />
       ) : (
@@ -434,6 +450,9 @@ function AppView() {
                                           taskExpectedEndDate:{changeDateFormat(task.taskExpectedEndDate)}
                                           <br />
                                         </Typography>
+                                        <Button variant="contained" color="primary" onClick={()=>openComment(project,task)}>
+                                          <AddCommentIcon/> Comment
+                                        </Button>
                                       </AccordionDetails>
                                     </Accordion>
                                   ))}

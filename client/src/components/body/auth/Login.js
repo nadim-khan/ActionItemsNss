@@ -15,6 +15,7 @@ import {
     TextField
 } from "@material-ui/core";
 import SendIcon from '@material-ui/icons/Send';
+import Spinner from '../../utils/Spinner/Spinner';
 const useStyles=makeStyles(theme=>({
     
     button:{
@@ -70,6 +71,7 @@ const Login = () => {
     const history = useHistory()
     const [user, setUser] = useState(initialState);
     const [notification, setNotification] = useState(notificationData);
+    const [isLoading,setLoading] = useState(false)
 
     const { email, password} = user;
 
@@ -85,6 +87,7 @@ const Login = () => {
 
     const loginAuth = async(e) => {
         e.preventDefault();
+        setLoading(true)
         setNotification({
             ...notification,
             type:'',
@@ -99,15 +102,18 @@ const Login = () => {
             localStorage.setItem('firstLogin', true);
 
             dispatch(dispatchLogin())
+            setLoading(false)
             // history.push('/')
 
         } catch(err) {
             err.response.data.msg && setUser({...user});
             setNotification({ ...notification,type:'error', msg:err.response.data.msg})
+            setLoading(false)
         }
     }
 
     const responseGoogle = async (response) => {
+        setLoading(true)
         try {
             const res = await axios.post('/user/google_login', {tokenId: response.tokenId})
 
@@ -119,6 +125,7 @@ const Login = () => {
                     type:'success',
                     msg:'Successfully Logged In'
                 })
+                setLoading(false)
                 setTimeout(()=>{
                     
                        history.push('/')
@@ -134,11 +141,13 @@ const Login = () => {
                 type:'error',
                 msg:'Something went wrong'
             })
+            setLoading(false)
         }
     }
 
     return (
         <Box component="div" style={{height:'90vh'}}>
+            {isLoading ? <Spinner></Spinner> : <></>}
             <Grid container justify="center">
             <Grid item xs={9}>
             {/* {(notification.type !== '') ? <div><Notification type={notification.type} msg={notification.msg} /><br/></div> : <></>} */}
