@@ -157,6 +157,7 @@ const MainView = () => {
   const [open, setOpen] = React.useState(false);
   const auth = useSelector((state) => state.auth);
   const { user, isLogged } = auth;
+  console.log('user 1',user)
   const links = isLogged && user ? menuItems : signInItems;
   const handleLogout = async () => {
     try {

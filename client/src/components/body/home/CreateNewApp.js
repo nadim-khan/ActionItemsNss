@@ -27,6 +27,8 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   form: {
+    maxHeight:'90vh',
+    overflow:'auto'
   },
   button: {
     marginTop: "1rem",
@@ -89,7 +91,7 @@ const CreateNewApp = (props) => {
     projectName: "",
     projectStartDate: formattedDate(new Date()),
     projectExpectedEndDate: formattedDate(new Date()),
-    projectCreatedBy: user.name,
+    projectCreatedBy: user.email,
     projectCreatedDate: formattedDate(new Date()),
     taskDetails: [
       {
@@ -198,7 +200,7 @@ const CreateNewApp = (props) => {
       if (!saved) {
         setProjectData({
           ...projectData,
-          projectCreatedBy: user.name,
+          projectCreatedBy: user.email,
           taskDetails: currentTask,
         });
         setNotification({

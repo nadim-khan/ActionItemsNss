@@ -37,6 +37,8 @@ import {
   fetchAllProject,
   deleteOneProject,
   dispatchDeleteProject,
+  fetchUsersAllProject,
+  dispatchUsersAllProject,
 } from "../../../redux/actions/projectAction";
 import CreateNewApp from "./CreateNewApp";
 import SpeedDial from "@material-ui/lab/SpeedDial";
@@ -246,8 +248,8 @@ function AppView() {
   const auth = useSelector((state) => state.auth);
   const token = useSelector((state) => state.token);
   const projects = useSelector((state) => state.projects);
-  const { user, isLogged } = auth;
-
+  const { user, isLogged,isAdmin } = auth;
+console.log('UUUUUUUUSer : ',user,isLogged,isAdmin)
   const [notification, setNotification] = useState(notificationData);
   const [expanded, setExpanded] = useState(false);
   const [isUpdate, setUpdate] = useState({
@@ -268,14 +270,22 @@ function AppView() {
     } else {
       setLoading(false);
     }
-  }, [token, dispatch, isLogged]);
+  }, [token, dispatch, user,isLogged]);
 
   const getAllProjects = () => {
     setLoading(true);
-    fetchAllProject(token).then((res) => {
-      setLoading(false);
-      dispatch(dispatchAllProject(res));
-    });
+    if(isAdmin) {
+      console.log('User : ',user)
+      fetchAllProject(token).then((res) => {
+        setLoading(false);
+        dispatch(dispatchAllProject(res));
+      });
+    } else {
+      fetchUsersAllProject(token,{email:user.email}).then((res) => {
+        setLoading(false);
+        dispatch(dispatchUsersAllProject(res));
+      });
+    }
   };
 
   const deleteProject = (id) => {
@@ -403,6 +413,9 @@ function AppView() {
                           <Grid item xs={12}>
                             <Grid container justify="center" spacing={1}>
                               <Grid item xs={12} sm={12} md={3} lg={3}>
+                              <Typography variant="h6" align="center">
+                                    Project Details
+                                  </Typography>
                                 <Box component="div" className={classes.paper} >
                                   projectName: {project.projectName}
                                   <br />
@@ -416,6 +429,9 @@ function AppView() {
                                 </Box>
                               </Grid>
                               <Grid item xs={12} sm={12} md={9} lg={6}>
+                              <Typography variant="h6" align="center">
+                                    Task Details
+                                  </Typography>
                                 <Box component="div" className={classes.paper} >
                                   {project.taskDetails.map((task, id) => (
                                     <Accordion
@@ -459,10 +475,11 @@ function AppView() {
                                 </Box>
                               </Grid>
                               <Grid item xs={12} sm={12} md={12} lg={3}>
-                                <Box component="div" className={classes.paper} >
-                                  <Typography variant="h6" align="center">
+                              <Typography variant="h6" align="center">
                                     History
                                   </Typography>
+                                <Box component="div" className={classes.paper} >
+                                  
                                   <Timeline align="left" className={classes.historyDetails}>
                                     {project.history.map((item, hId) => (
                                       <TimelineItem key={hId}>

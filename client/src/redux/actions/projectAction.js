@@ -24,6 +24,21 @@ export const dispatchAllProject = (res) => {
     }
 }
 
+// All Projects Data specific to user
+export const fetchUsersAllProject = async (token,email) => {
+    const res = await axios.post(`/app/getUserApps`, email,{
+        headers: {Authorization: token}
+    })
+    return res
+}
+
+export const dispatchUsersAllProject = (res) => {
+    return {
+        type: ACTIONS.FETCH_USERS_ALL_PROJECTS,
+        payload: res.data
+    }
+}
+
 //Delete Single Project
 
 export const deleteOneProject = async (token,projectId) => {

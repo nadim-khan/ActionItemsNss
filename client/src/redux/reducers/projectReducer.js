@@ -10,6 +10,10 @@ const projectsReducer = (state = projects, action) => {
             return action.payload
         case ACTIONS.UPDATE_ONE_PROJECT:
             return action.payload
+            case ACTIONS.FETCH_USERS_ALL_PROJECTS: {
+                console.log(action.payload)
+                return action.payload
+            }
         default:
             return state
     }

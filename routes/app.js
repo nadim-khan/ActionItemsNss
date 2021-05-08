@@ -7,6 +7,8 @@ router.post('/register', appCtrl.register)
 
 router.get('/getAllApps', appCtrl.getAllApps)
 
+router.post('/getUserApps', appCtrl.getUserApps)
+
 router.delete('/deleteApp/:id', appCtrl.deleteApp)
 
 

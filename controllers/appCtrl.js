@@ -77,6 +77,18 @@ const appCtrl = {
             return res.status(500).json({msg: err.message})
         }
     },
+
+    getUserApps:async (req, res) => {
+        try {
+            console.log(req.body)
+            const {email} = req.body;
+            const myApps = await App.find({projectCreatedBy:email});
+            console.log('myApps',myApps)
+            if(myApps) return res.status(200).json(myApps)
+        } catch (err) {
+            return res.status(500).json({msg: err.message})
+        }
+    },
     
     deleteApp: async (req,res) =>{
         try {

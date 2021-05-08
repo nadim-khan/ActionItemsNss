@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import MUIRichTextEditor from 'mui-rte'
 import AddCommentIcon from '@material-ui/icons/AddComment';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import { createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles'
 import { Typography, Box, Grid, Button, TextField, Tooltip, Avatar } from "@material-ui/core";
 import AvatarGroup from "@material-ui/lab/AvatarGroup";
 import TableChartIcon from '@material-ui/icons/TableChart'
@@ -12,28 +10,23 @@ import { AddComment } from '@material-ui/icons';
 import Spinner from '../Spinner/Spinner';
 import Editor from '../Editor/Editor';
 
-const defaultTheme = createMuiTheme()
-
-Object.assign(defaultTheme, {
-    overrides: {
-        MUIRichTextEditor: {
-            root: {
-                marginTop: 20,
-                width: "100%",
-                padding: '0.2rem'
-            },
-            editor: {
-                borderBottom: "1px solid gray"
-            }
-        }
-    }
-})
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
     main: {
-        width: '40vw',
-        maxHeight: '100vh',
-        height: 'auto',
-        overflow: "auto",
+        [theme.breakpoints.down('sm')]: {
+            width: '60vw',
+            maxHeight: '100%',
+            overflow: 'auto'
+          },
+          [theme.breakpoints.up('md')]: {
+            width: '50vw',
+            maxHeight: '100%',
+            overflow: 'auto'
+          },
+          [theme.breakpoints.up('lg')]: {
+            width: '40vw',
+            maxHeight: '100%',
+            overflow: 'auto'
+          },
         "&::-webkit-scrollbar": {
             width: "0.5em",
         },
@@ -57,7 +50,7 @@ const useStyles = makeStyles({
     commentView: {
         padding: '1rem'
     }
-});
+}));
 
 export default function CommentView(props) {
     const classes = useStyles();
